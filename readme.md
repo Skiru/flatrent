@@ -11,8 +11,8 @@ As an landlord you can:
 
 Easy with domain logic, more for the infrastructure
 
-Code to invite to apratment
-Join free apartment
+Code to invite to apartment
+Join unoccupied apartment
 Time when apartment is occupied
 Landlord can say whether apartment is cleaned after a visit or not
 Reminder about time remaining in apartment
@@ -21,4 +21,6 @@ Review after a visit
 Possibility to add a photos
 Messages to a landlord?
 Pricing later on?
-
+Searching for an apartment in area,
+Searching for apartment with availability
+Searching for a period of time when apartment is available
