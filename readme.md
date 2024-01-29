@@ -24,3 +24,8 @@ Easy with domain logic, more for the infrastructure
 - Searching for an apartment in area,
 - Searching for apartment with availability
 - Searching for a period of time when apartment is available
+
+### Stack
+- Traefik 2.10 - load balancing
+- PHP 8.3 - application core language
+- Nginx - web server
