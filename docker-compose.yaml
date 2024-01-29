@@ -1,35 +1,27 @@
-version: "3.9"
+version: "3.8"
 services:
   php:
     build:
       context: .
       dockerfile: ./docker/php/Dockerfile
     volumes:
-      - .:/var/www/html:rw
+      - .:/var/www/html
     restart: unless-stopped
+
   nginx:
     build:
       context: .
       dockerfile: ./docker/nginx/Dockerfile
     volumes:
       - .:/var/www/html
-    restart: unless-stopped
-    ports:
-      - "8001:80"
     labels:
-      - "traefik.http.routers.nginx.rule=Host(`flatrent.local`)"
+      - "traefik.http.routers.nginx.rule=Host(`flatrent.localhost`)"
+
   reverse-proxy:
     image: traefik:v2.10
-    privileged: true
-    command:
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - '--providers.docker.watch=true'
+    command: --api.insecure=true --providers.docker
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./:/etc/traefik
     ports:
       - "80:80"
-      - "443:443"
       - "8080:8080"
-    restart: unless-stopped
