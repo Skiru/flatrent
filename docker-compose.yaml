@@ -6,7 +6,6 @@ services:
       dockerfile: ./docker/php/Dockerfile
     volumes:
       - .:/var/www/html
-    restart: unless-stopped
 
   nginx:
     build:
