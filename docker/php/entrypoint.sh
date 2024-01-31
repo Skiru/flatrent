@@ -3,6 +3,10 @@
 echo "Welcome to entrypoint :)"
 set -eux
 
+echo "Installing composer"
+
+composer install
+
 echo "Setting up var directory permissions - for symfony app"
 # Symfony directories permissions based on setfacl function from acl package
 HTTPDUSER=$(ps axo user,comm | grep -E '[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx' | grep -v root | head -1 | awk '{print $2}')
