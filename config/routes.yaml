@@ -1,5 +1,3 @@
-controllers:
-    resource:
-        path: ../src/Controller/
-        namespace: App\Controller
-    type: attribute
+flat_create:
+  path: /flats
+  controller: App\UI\Controller\CreateFlatController
