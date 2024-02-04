@@ -6,6 +6,6 @@ namespace App\Domain\Flat\Room;
 
 use App\Shared\Domain\Ulid;
 
-final  class RoomId extends Ulid
+final class RoomId extends Ulid
 {
 }

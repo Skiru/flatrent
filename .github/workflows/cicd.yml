@@ -39,3 +39,5 @@ jobs:
         run: vendor/bin/phpunit
       - name: Execute phpstan
         run: vendor/bin/phpstan analyze -c ./phpstan.dist.neon
+      - name: Execute phpcs
+        run: vendor/bin/phpcs

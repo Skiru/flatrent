@@ -6,5 +6,4 @@ namespace App\Domain\Flat\Room;
 
 final readonly class Room
 {
-
 }
