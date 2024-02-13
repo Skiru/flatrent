@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Shared\Domain;
 
-use App\Domain\Flat\Room\RoomId;
+use App\CreateFlat\Domain\Flat\Room\RoomId;
 use App\Tests\UnitTestCase;
 use Lcobucci\Clock\FrozenClock;
 

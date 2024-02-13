@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\UI\Controller;
+namespace App\CreateFlat\UI\Controller;
 
-use App\Application\CreateFlat\CreateFlatCommand;
-use App\Domain\Flat\FlatId;
-use App\Domain\User\UserId;
+use App\CreateFlat\Application\CreateFlat\CreateFlatCommand;
+use App\CreateFlat\Domain\Flat\FlatId;
+use App\CreateFlat\Domain\User\UserId;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Messenger\MessageBusInterface;

@@ -8,6 +8,7 @@
     "ext-ctype": "*",
     "ext-iconv": "*",
     "lcobucci/clock": "^3.2",
+    "php-ds/php-ds": "^1.5",
     "symfony/console": "7.0.*",
     "symfony/dotenv": "7.0.*",
     "symfony/flex": "^2",

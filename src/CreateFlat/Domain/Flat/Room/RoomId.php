@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Flat\Room;
+namespace App\CreateFlat\Domain\Flat\Room;
 
 use App\Shared\Domain\Ulid;
 

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Flat;
+namespace App\CreateFlat\Domain\Flat;
 
-use App\Domain\User\UserId;
+use App\CreateFlat\Domain\User\UserId;
 
 final readonly class FlatFactory
 {
