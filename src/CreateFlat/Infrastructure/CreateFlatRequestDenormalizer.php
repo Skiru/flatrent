@@ -31,11 +31,7 @@ final readonly class CreateFlatRequestDenormalizer implements DenormalizerInterf
 
         $mapData = new Map($data);
 
-        $constraint = new Collection(
-            [
-
-            ]
-        );
+        $constraint = new Collection([]);
 
         $validationResult = $this->validator->validate($constraint);
 
