@@ -12,9 +12,9 @@ use Ds\Vector;
 final readonly class Flat
 {
     /**
-     * @param Vector<Room> $room
+     * @param Vector<Room> $rooms
      */
-    public function __construct(public FlatId $flatId, public UserId $ownerId, Address $address, Vector $room)
+    public function __construct(public FlatId $flatId, public UserId $ownerId, Address $address, Vector $rooms)
     {
     }
 

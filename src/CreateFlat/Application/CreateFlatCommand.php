@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\CreateFlat\Application\CreateFlat;
+namespace App\CreateFlat\Application;
 
 use App\CreateFlat\Domain\Flat\FlatId;
 use App\CreateFlat\Domain\User\UserId;
