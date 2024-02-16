@@ -16,6 +16,6 @@ final readonly class CreateFlatHandler
 
     public function __invoke(CreateFlatCommand $command): void
     {
-        $flat = $this->flatFactory->create($command->flatId, $command->ownerId);
+        $flat = $this->flatFactory->create($command->flatId, $command->ownerId, $command->address, $command->rooms);
     }
 }

@@ -1,0 +1,17 @@
+POST http://flatrent.localhost/api/flats HTTP/1.1
+Content-Type: application/json
+
+{
+  "id": "01HPT4MRMGQ808WHWCX889XVAD",
+  "address": {
+    "city": "Rzeszów",
+    "street": "Warszawska",
+    "zipCde": "35-233",
+    "building": {
+      "number": 997,
+      "doorNumber": 25,
+      "flatNumber": 6
+    }
+  },
+  "rooms": []
+}

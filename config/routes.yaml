@@ -1,3 +1,4 @@
 flat_create:
-  path: /flats
-  controller: App\UI\Controller\CreateFlatController
+  path: /api/flats
+  methods: POST
+  controller: App\CreateFlat\UI\Controller\CreateFlatController
