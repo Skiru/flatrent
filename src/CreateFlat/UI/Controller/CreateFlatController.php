@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\CreateFlat\UI\Controller;
 
 use App\CreateFlat\Application\CreateFlatCommand;
+use App\CreateFlat\Application\CreateFlatRequest;
 use App\CreateFlat\Domain\Flat\Address\Address;
 use App\CreateFlat\Domain\Flat\Address\Building\Building;
 use App\CreateFlat\Domain\Flat\Address\Building\BuildingNumber;
@@ -21,11 +22,26 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Serializer\Encoder\DecoderInterface;
+use Symfony\Component\Serializer\Encoder\JsonDecode;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 final class CreateFlatController extends AbstractController
 {
-    public function __invoke(MessageBusInterface $bus, Request $request): JsonResponse
-    {
+    public function __invoke(
+        MessageBusInterface $bus,
+        Request $request,
+        SerializerInterface $serializer,
+    ): JsonResponse {
+        /** @var CreateFlatRequest $dto */
+        $dto = $serializer->deserialize(
+            $request->getContent(),
+            CreateFlatRequest::class,
+            JsonEncoder::FORMAT,
+        );
+
         $command = new CreateFlatCommand(
             FlatId::create(),
             UserId::create(),

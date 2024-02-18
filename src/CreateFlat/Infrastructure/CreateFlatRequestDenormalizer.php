@@ -63,6 +63,6 @@ final readonly class CreateFlatRequestDenormalizer implements DenormalizerInterf
 
     public function getSupportedTypes(?string $format): array
     {
-        return [CreateFlatRequest::class];
+        return [CreateFlatRequest::class => true];
     }
 }
