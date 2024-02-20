@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\CreateFlat\Application;
+namespace App\CreateFlat\UI\Controller;
 
-final readonly class CreateRoomRequest
+class CreateRoomDto
 {
     public function __construct(
         public string $roomName,

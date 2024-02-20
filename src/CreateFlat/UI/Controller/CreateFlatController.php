@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\CreateFlat\UI\Controller;
 
 use App\CreateFlat\Application\CreateFlatCommand;
-use App\CreateFlat\Application\CreateFlatRequest;
 use App\CreateFlat\Domain\Flat\Address\Address;
 use App\CreateFlat\Domain\Flat\Address\Building\Building;
 use App\CreateFlat\Domain\Flat\Address\Building\BuildingNumber;
@@ -19,28 +18,30 @@ use App\CreateFlat\Domain\User\UserId;
 use Ds\Vector;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Serializer\Encoder\DecoderInterface;
-use Symfony\Component\Serializer\Encoder\JsonDecode;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
 final class CreateFlatController extends AbstractController
 {
-    public function __invoke(
+    public function __construct(
         MessageBusInterface $bus,
-        Request $request,
         SerializerInterface $serializer,
+    ) {
+    }
+
+    public function __invoke(
+        #[MapRequestPayload] CreateFlatDto $createFlatDto,
     ): JsonResponse {
-        /** @var CreateFlatRequest $dto */
-        $dto = $serializer->deserialize(
-            $request->getContent(),
-            CreateFlatRequest::class,
-            JsonEncoder::FORMAT,
-        );
+//        /** @var CreateFlatRequest $dto */
+//        $dto = $serializer->deserialize(
+//            $request->getContent(),
+//            CreateFlatRequest::class,
+//            JsonEncoder::FORMAT,
+//        );
+
+        dd($createFlatDto);
 
         $command = new CreateFlatCommand(
             FlatId::create(),

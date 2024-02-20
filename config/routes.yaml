@@ -1,4 +1,5 @@
 flat_create:
   path: /api/flats
-  methods: POST
+  methods: [ 'POST' ]
+  format: 'json'
   controller: App\CreateFlat\UI\Controller\CreateFlatController
