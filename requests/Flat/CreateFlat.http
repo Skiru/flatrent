@@ -3,43 +3,43 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "id": "01HPT4MRMGQ808WHWCX889XVAD"
+  "id": "01HQ9F4KS199E2MTWQ59BA5S8D",
+  "address": {
+    "id": "01HQ9HZNSKXFEZ3BW06C7PYA42",
+    "city": "Rzeszów",
+    "street": "Warszawska",
+    "zipCode": "35-233",
+    "building": {
+      "number": 12,
+      "doorNumber": 25,
+      "flatNumber": 6
+    }
+  },
+  "rooms": [
+    {
+      "id": "01HPWKVGYAFYBW71KQ84M0ZBR6",
+      "name": "kuchnia",
+      "type": "KITCHEN"
+    },
+    {
+      "id": "01HPWKXDQC6M3SC8JJ68QBGX6S",
+      "name": "lazienka",
+      "type": "BATHROOM"
+    },
+    {
+      "id": "01HPWKXPNNX91N53XKQ7M8AAJ6",
+      "name": "salon",
+      "type": "LIVING_ROOM"
+    },
+    {
+      "id": "01HPWKVGYAFYBW71KQ84M0ZBR6",
+      "name": "pokój1",
+      "type": "REGULAR"
+    },
+    {
+      "id": "01HPWKZB5K7CN6X90N0X2F95K4",
+      "name": "pokój2",
+      "type": "REGULAR"
+    }
+  ]
 }
-
-//"address": {
-//"city": "Rzeszów",
-//"street": "Warszawska",
-//"zipCde": "35-233",
-//"building": {
-//"number": 997,
-//"doorNumber": 25,
-//"flatNumber": 6
-//}
-//},
-//"rooms": [
-//{
-//"id": "01HPWKVGYAFYBW71KQ84M0ZBR6",
-//"roomName": "kuchnia",
-//"roomType": "KITCHEN"
-//},
-//{
-//"id": "01HPWKXDQC6M3SC8JJ68QBGX6S",
-//"roomName": "lazienka",
-//"roomType": "KITCHEN"
-//},
-//{
-//"id": "01HPWKXPNNX91N53XKQ7M8AAJ6",
-//"roomName": "salon",
-//"roomType": "LIVING_ROOM"
-//},
-//{
-//"id": "01HPWKVGYAFYBW71KQ84M0ZBR6",
-//"roomName": "pokój1",
-//"roomType": "STANDARD"
-//},
-//{
-//"id": "01HPWKZB5K7CN6X90N0X2F95K4",
-//"roomName": "pokój2",
-//"roomType": "STANDARD"
-//}
-]

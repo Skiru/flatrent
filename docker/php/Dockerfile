@@ -4,8 +4,9 @@ FROM php:8.3.2-fpm-alpine3.19
 RUN apk add gcc autoconf libc-dev make
 
 RUN apk add acl $PHPPIZE_DEPS postgresql-dev  && \
-    docker-php-ext-install opcache pdo pdo_pgsql && \
-    docker-php-ext-enable opcache pdo pdo_pgsql
+    docker-php-ext-configure intl && \
+    docker-php-ext-install opcache pdo pdo_pgsql intl && \
+    docker-php-ext-enable opcache pdo pdo_pgsql intl
 
 RUN pecl install ds
 
