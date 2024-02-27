@@ -23,6 +23,17 @@ enum RoomType
 
     public static function fromString(string $type): self
     {
-        return Vector::fromArray(self::cases())->
+        /** @var array<int, self> $cases */
+        $cases = self::cases();
+
+        $type = Vector::fromArray($cases)->findOneByClosure(static fn(self $enum): bool => $enum->name === $type);
+
+        if ($type === null) {
+            throw new InvalidRoomTypeException(
+                sprintf('%s is not a valid room type', $type)
+            );
+        }
+
+        return $type;
     }
 }

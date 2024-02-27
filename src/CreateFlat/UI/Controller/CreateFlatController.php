@@ -40,15 +40,15 @@ final class CreateFlatController extends AbstractController
             static fn(RoomDto $dto): Room => new Room(
                 RoomId::fromString($dto->id),
                 new RoomName($dto->name ?? 'no-name'),
-                RoomType::
-            )
+                RoomType::fromString($dto->type),
+            ),
         );
 
         $rooms = Vector::fromArray($roomsSequence->toArray());
 
         $command = new CreateFlatCommand(
             FlatId::fromString($flatDto->id),
-            UserId::create(),
+            UserId::create(), //TODO change whe introduce ownership
             new Address(
                 new City($flatDto->address->city),
                 new Street($flatDto->address->street),
@@ -61,7 +61,6 @@ final class CreateFlatController extends AbstractController
             ),
             $rooms,
         );
-        dd($command);
         $this->bus->dispatch($command);
 
         return new JsonResponse(null, Response::HTTP_CREATED);

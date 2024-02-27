@@ -38,9 +38,24 @@ final readonly class Vector
         return new self($this->vector->map($closure));
     }
 
-    public function containsUsingFunction(Closure $closure): bool
+    /**
+     * @param Closure(T): bool $closure
+     * @return ?T
+     */
+    public function findOneByClosure(Closure $closure): mixed
     {
-        $this->vector->find()
+        $found = $this->vector->filter($closure);
+        $numberOfFound = $found->count();
+
+        if ($numberOfFound > 1) {
+            throw new \LogicException(sprintf('More than one result found. Found %d', $numberOfFound));
+        }
+
+        if ($found->isEmpty()) {
+            return null;
+        }
+
+        return $found->first();
     }
 
     /**

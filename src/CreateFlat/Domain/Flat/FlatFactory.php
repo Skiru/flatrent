@@ -7,7 +7,7 @@ namespace App\CreateFlat\Domain\Flat;
 use App\CreateFlat\Domain\Flat\Address\Address;
 use App\CreateFlat\Domain\Flat\Room\Room;
 use App\CreateFlat\Domain\User\UserId;
-use Ds\Vector;
+use App\Shared\Domain\DataStructures\Vector;
 
 final readonly class FlatFactory
 {
