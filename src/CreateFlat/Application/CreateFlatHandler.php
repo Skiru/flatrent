@@ -19,5 +19,7 @@ final readonly class CreateFlatHandler
         $flat = $this->flatFactory->create($command->flatId, $command->ownerId, $command->address, $command->rooms);
 
         dd($flat);
+
+
     }
 }
