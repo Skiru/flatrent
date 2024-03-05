@@ -6,5 +6,4 @@ namespace App\Shared\Infrastructure\Entity;
 
 class Flat
 {
-
 }

@@ -20,18 +20,20 @@ final readonly class Vector
     }
 
     /**
-     * @param array<int, T> $items
-     * @return self<T>
+     * @template X
+     * @param array<int, X> $items
+     * @return self<X>
      */
     public static function fromArray(array $items): self
     {
+        /** @var Vector<X> */
         return new self(new NativeVector($items));
     }
 
     /**
      * @template R
      * @param Closure(T): R $closure
-     * @return Vector<R>
+     * @return self<R>
      */
     public function transform(Closure $closure): self
     {
@@ -44,7 +46,7 @@ final readonly class Vector
      */
     public function findOneByClosure(Closure $closure): mixed
     {
-        $found = $this->vector->filter($closure);
+        $found         = $this->vector->filter($closure);
         $numberOfFound = $found->count();
 
         if ($numberOfFound > 1) {

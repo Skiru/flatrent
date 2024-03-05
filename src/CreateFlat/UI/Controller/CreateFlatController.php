@@ -18,8 +18,8 @@ use App\CreateFlat\Domain\Flat\Room\Room;
 use App\CreateFlat\Domain\Flat\Room\RoomId;
 use App\CreateFlat\Domain\Flat\Room\RoomName;
 use App\CreateFlat\Domain\Flat\Room\RoomType;
-use App\CreateFlat\Domain\User\UserId;
 use App\Shared\Domain\DataStructures\Vector;
+use App\Shared\Domain\User\UserId;
 use App\Shared\Infrastructure\Dto\FlatDto;
 use App\Shared\Infrastructure\Dto\RoomDto;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -39,7 +39,7 @@ final class CreateFlatController extends AbstractController
         $roomsSequence = Vector::fromArray($flatDto->rooms)->transform(
             static fn(RoomDto $dto): Room => new Room(
                 RoomId::fromString($dto->id),
-                new RoomName($dto->name ?? 'no-name'),
+                new RoomName(($dto->name ?? 'no-name')),
                 RoomType::fromString($dto->type),
             ),
         );

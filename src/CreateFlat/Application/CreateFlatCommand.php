@@ -7,8 +7,8 @@ namespace App\CreateFlat\Application;
 use App\CreateFlat\Domain\Flat\Address\Address;
 use App\CreateFlat\Domain\Flat\FlatId;
 use App\CreateFlat\Domain\Flat\Room\Room;
-use App\CreateFlat\Domain\User\UserId;
 use App\Shared\Domain\DataStructures\Vector;
+use App\Shared\Domain\User\UserId;
 use App\Shared\SyncMessageInterface;
 
 final readonly class CreateFlatCommand implements SyncMessageInterface

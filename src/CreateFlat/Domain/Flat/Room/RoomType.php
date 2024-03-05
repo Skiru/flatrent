@@ -18,7 +18,10 @@ enum RoomType
     /** @return array<int, string> */
     public static function values(): array
     {
-        return Vector::fromArray(self::cases())->transform(static fn(UnitEnum $unit): string => $unit->name)->toArray();
+        /** @var array<int, UnitEnum> $cases */
+        $cases = self::cases();
+
+        return Vector::fromArray($cases)->transform(static fn(UnitEnum $unit): string => $unit->name)->toArray();
     }
 
     public static function fromString(string $type): self
