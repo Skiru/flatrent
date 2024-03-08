@@ -1,0 +1,46 @@
+POST http://flatrent.localhost/api/flats?XDEBUG_SESSION_START=PHPSTORM HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "propertyId": "01HRDGRSVNQEDK8DN2ENMFH7CX",
+  "id": "01HQ9F4KS199E2MTWQ59BA5S8D",
+  "address": {
+    "id": "01HQ9HZNSKXFEZ3BW06C7PYA42",
+    "city": "Rzeszów",
+    "street": "Warszawska",
+    "zipCode": "35-233",
+    "building": {
+      "number": 12,
+      "doorNumber": 25,
+      "flatNumber": 6
+    }
+  },
+  "rooms": [
+    {
+      "id": "01HPWKVGYAFYBW71KQ84M0ZBR6",
+      "name": "kuchnia",
+      "type": "KITCHEN"
+    },
+    {
+      "id": "01HPWKXDQC6M3SC8JJ68QBGX6S",
+      "name": "lazienka",
+      "type": "BATHROOM"
+    },
+    {
+      "id": "01HPWKXPNNX91N53XKQ7M8AAJ6",
+      "name": "salon",
+      "type": "LIVING_ROOM"
+    },
+    {
+      "id": "01HPWKVGYAFYBW71KQ84M0ZBR6",
+      "name": "pokój1",
+      "type": "REGULAR"
+    },
+    {
+      "id": "01HPWKZB5K7CN6X90N0X2F95K4",
+      "name": "pokój2",
+      "type": "REGULAR"
+    }
+  ]
+}
