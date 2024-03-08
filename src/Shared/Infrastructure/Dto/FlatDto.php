@@ -13,6 +13,8 @@ final readonly class FlatDto
      */
     public function __construct(
         #[Assert\Ulid]
+        public string $propertyId,
+        #[Assert\Ulid]
         public string $id,
         #[Assert\Valid]
         public AddressDto $address,

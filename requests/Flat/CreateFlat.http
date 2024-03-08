@@ -3,6 +3,7 @@ Content-Type: application/json
 Accept: application/json
 
 {
+  "propertyId": "01HRDGRSVNQEDK8DN2ENMFH7CX",
   "id": "01HQ9F4KS199E2MTWQ59BA5S8D",
   "address": {
     "id": "01HQ9HZNSKXFEZ3BW06C7PYA42",

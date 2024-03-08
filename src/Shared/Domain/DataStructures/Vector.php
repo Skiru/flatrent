@@ -46,7 +46,7 @@ final readonly class Vector
      */
     public function findOneByClosure(Closure $closure): mixed
     {
-        $found         = $this->vector->filter($closure);
+        $found = $this->vector->filter($closure);
         $numberOfFound = $found->count();
 
         if ($numberOfFound > 1) {
@@ -58,6 +58,11 @@ final readonly class Vector
         }
 
         return $found->first();
+    }
+
+    public static function empty(): self
+    {
+        return new self(new NativeVector([]));
     }
 
     /**

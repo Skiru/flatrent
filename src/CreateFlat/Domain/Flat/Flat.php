@@ -8,8 +8,9 @@ use App\CreateFlat\Domain\Flat\Address\Address;
 use App\CreateFlat\Domain\Flat\Room\Room;
 use App\Shared\Domain\DataStructures\Vector;
 use App\Shared\Domain\User\UserId;
+use Ds\Hashable;
 
-final readonly class Flat
+final readonly class Flat implements Hashable
 {
     /**
      * @param Vector<Room> $rooms
@@ -25,5 +26,19 @@ final readonly class Flat
     public function isOwner(UserId $userId): bool
     {
         return $this->ownerId->equals($userId);
+    }
+
+    public function hash(): string
+    {
+        return $this->flatId->toString();
+    }
+
+    public function equals(mixed $obj): bool
+    {
+        if (!$obj instanceof self) {
+            return false;
+        }
+
+        return $this->flatId->equals($obj->flatId);
     }
 }
