@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  ministack:
+    image: ministackorg/ministack:1.3.72
+    container_name: flatren-ministack
+    ports:
+      - "4566:4566"
+    environment:
+      PERSIST_STATE: "1"
+      S3_PERSIST: "1"
+      RDS_PERSIST: "1"
+      LOG_LEVEL: "INFO"
+      RDS_BASE_PORT: "15432"
+      ELASTICACHE_BASE_PORT: "16379"
+    volumes:
+      - ./var/ministack/state:/tmp/ministack-state
+      - ./var/ministack/s3:/tmp/ministack-data/s3
+      - /var/run/docker.sock:/var/run/docker.sock
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:4566/_ministack/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 20
+      start_period: 10s

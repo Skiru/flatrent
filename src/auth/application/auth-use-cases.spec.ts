@@ -6,6 +6,12 @@ import { RefreshTokenUseCase } from './commands/refresh-token/refresh-token.use-
 import { RefreshTokenCommand } from './commands/refresh-token/refresh-token.command';
 import { LogoutUseCase } from './commands/logout/logout.use-case';
 import { LogoutCommand } from './commands/logout/logout.command';
+import { ChangePasswordUseCase } from './commands/change-password/change-password.use-case';
+import { ChangePasswordCommand } from './commands/change-password/change-password.command';
+import { RevokeSessionsUseCase } from './commands/revoke-sessions/revoke-sessions.use-case';
+import { RevokeSessionsCommand } from './commands/revoke-sessions/revoke-sessions.command';
+import { GetCurrentActorUseCase } from './queries/get-current-actor/get-current-actor.use-case';
+import { GetCurrentActorQuery } from './queries/get-current-actor/get-current-actor.query';
 import { UserRole } from '../domain/model/user-account.aggregate';
 import { RefreshSessionTokenReuseDetectedError } from '../domain/model/refresh-session.entity';
 import {
@@ -27,6 +33,9 @@ describe('Auth Context Application Use Cases', () => {
   let loginUseCase: LoginUseCase;
   let refreshUseCase: RefreshTokenUseCase;
   let logoutUseCase: LogoutUseCase;
+  let changePasswordUseCase: ChangePasswordUseCase;
+  let revokeSessionsUseCase: RevokeSessionsUseCase;
+  let getCurrentActorUseCase: GetCurrentActorUseCase;
 
   beforeEach(() => {
     userRepo = new MockUserAccountRepository();
@@ -39,6 +48,9 @@ describe('Auth Context Application Use Cases', () => {
     loginUseCase = new LoginUseCase(userRepo, sessionRepo, passwordHasher, idGen, clock);
     refreshUseCase = new RefreshTokenUseCase(sessionRepo, userRepo, passwordHasher, idGen, clock);
     logoutUseCase = new LogoutUseCase(sessionRepo);
+    changePasswordUseCase = new ChangePasswordUseCase(userRepo, passwordHasher, idGen, clock);
+    revokeSessionsUseCase = new RevokeSessionsUseCase(sessionRepo);
+    getCurrentActorUseCase = new GetCurrentActorUseCase(userRepo);
   });
 
   it('should successfully register, login, refresh, and logout a user', async () => {
@@ -123,5 +135,48 @@ describe('Auth Context Application Use Cases', () => {
         new RefreshTokenCommand(loginRes.sessionId, refreshRes1.nextRefreshToken),
       ),
     ).rejects.toThrow(RefreshSessionTokenReuseDetectedError);
+  });
+
+  it('should successfully change user password, and also support bulk session revocation', async () => {
+    await registerUseCase.execute(
+      new RegisterUserCommand(
+        'user-123',
+        'tenant@test.com',
+        'OldSecurePassword123',
+        UserRole.TENANT,
+      ),
+    );
+    const loginRes = await loginUseCase.execute(
+      new LoginCommand('tenant@test.com', 'OldSecurePassword123'),
+    );
+    expect(loginRes.userId).toBe('user-123');
+
+    // Change password
+    await changePasswordUseCase.execute(
+      new ChangePasswordCommand('user-123', 'OldSecurePassword123', 'NewSecurePassword999'),
+    );
+
+    // Verify login with old password fails
+    await expect(
+      loginUseCase.execute(new LoginCommand('tenant@test.com', 'OldSecurePassword123')),
+    ).rejects.toThrow(InvalidCredentialsError);
+
+    // Verify login with new password succeeds
+    const nextLogin = await loginUseCase.execute(
+      new LoginCommand('tenant@test.com', 'NewSecurePassword999'),
+    );
+    expect(nextLogin.userId).toBe('user-123');
+
+    // Revoke all sessions
+    await revokeSessionsUseCase.execute(new RevokeSessionsCommand('user-123'));
+    const firstSession = await sessionRepo.findById(loginRes.sessionId);
+    const secondSession = await sessionRepo.findById(nextLogin.sessionId);
+    expect(firstSession!.getIsRevoked()).toBe(true);
+    expect(secondSession!.getIsRevoked()).toBe(true);
+
+    // Get current actor details
+    const actor = await getCurrentActorUseCase.execute(new GetCurrentActorQuery('user-123'));
+    expect(actor.id).toBe('user-123');
+    expect(actor.email).toBe('tenant@test.com');
   });
 });

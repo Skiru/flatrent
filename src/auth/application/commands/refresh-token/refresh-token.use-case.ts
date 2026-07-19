@@ -32,11 +32,10 @@ export class RefreshTokenUseCase {
       throw new RefreshSessionExpiredError();
     }
 
-    // Verify token hash
-    // We compare hash of submitted token with current active hash in DB
-    const submittedHash = await this.passwordHasher.hash(command.refreshToken);
+    // Verify token cryptographically using Argon2id comparison
+    const isValid = await this.passwordHasher.compare(command.refreshToken, session.getTokenHash());
     try {
-      session.verifyTokenHash(submittedHash);
+      session.verifyToken(isValid);
     } catch (error) {
       // Save updated revoked status to database on reuse detection
       await this.sessionRepository.save(session);

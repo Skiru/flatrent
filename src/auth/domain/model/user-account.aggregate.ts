@@ -1,6 +1,7 @@
 import { AggregateRoot } from '../../../shared/domain/aggregate-root';
 import { Email } from './email.value-object';
 import { DomainEvent } from '../../../shared/domain/domain-event.interface';
+import { PasswordChangedDomainEvent } from '../events/password-changed.event';
 
 export enum UserStatus {
   ACTIVE = 'ACTIVE',
@@ -96,12 +97,24 @@ export class UserAccount extends AggregateRoot<string> {
     return this.status === UserStatus.BLOCKED;
   }
 
+  public changePassword(newHash: string, occurredAt: string, eventId: string): void {
+    this.passwordHash = newHash;
+    this.recordDomainEvent(
+      new PasswordChangedDomainEvent(
+        this.id,
+        'UserAccount',
+        { userId: this.id },
+        occurredAt,
+        eventId,
+      ),
+    );
+  }
+
   public block(): void {
     if (this.status === UserStatus.BLOCKED) {
       return;
     }
     this.status = UserStatus.BLOCKED;
-    this.incrementVersion();
   }
 }
 export class UserAccountBlockedError extends Error {

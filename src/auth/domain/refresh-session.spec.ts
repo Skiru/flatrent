@@ -17,9 +17,7 @@ describe('RefreshSession Aggregate', () => {
     expect(session.getTokenHash()).toBe('hash-next');
 
     // Mismatched token verification (reuse/hijack check)
-    expect(() => session.verifyTokenHash('hash-initial')).toThrow(
-      RefreshSessionTokenReuseDetectedError,
-    );
+    expect(() => session.verifyToken(false)).toThrow(RefreshSessionTokenReuseDetectedError);
     expect(session.getIsRevoked()).toBe(true); // Family revoked!
   });
 

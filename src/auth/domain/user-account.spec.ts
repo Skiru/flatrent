@@ -59,6 +59,6 @@ describe('UserAccount Aggregate Root', () => {
     user.block();
     expect(user.getStatus()).toBe(UserStatus.BLOCKED);
     expect(user.isBlocked()).toBe(true);
-    expect(user.getVersion()).toBe(1); // OCC version incremented
+    expect(user.getVersion()).toBe(0); // Managed by repository upon save
   });
 });

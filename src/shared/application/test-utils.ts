@@ -76,6 +76,13 @@ export class MockRefreshSessionRepository implements RefreshSessionRepository {
   public async save(session: RefreshSession): Promise<void> {
     this.sessions.set(session.id, session);
   }
+  public async revokeAllByUserId(userId: string): Promise<void> {
+    for (const session of this.sessions.values()) {
+      if (session.getUserId() === userId) {
+        session.revoke();
+      }
+    }
+  }
 }
 
 export class MockRentalUnitRepository implements RentalUnitRepository {

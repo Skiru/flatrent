@@ -46,20 +46,18 @@ export class RefreshSession extends AggregateRoot<string> {
     }
     this.tokenHash = newTokenHash;
     this.expiresAt = newExpiresAt;
-    this.incrementVersion();
   }
 
   public revoke(): void {
     this.isRevoked = true;
-    this.incrementVersion();
   }
 
-  public verifyTokenHash(hash: string): void {
+  public verifyToken(isValid: boolean): void {
     if (this.isRevoked) {
       throw new RefreshSessionTokenReuseDetectedError();
     }
-    if (this.tokenHash !== hash) {
-      // Re-use detected! If the hashes mismatch but we attempt to use this session,
+    if (!isValid) {
+      // Re-use detected! If the token is invalid but we attempt to use this session,
       // it means an older token is being submitted. Revoke immediately.
       this.revoke();
       throw new RefreshSessionTokenReuseDetectedError();
