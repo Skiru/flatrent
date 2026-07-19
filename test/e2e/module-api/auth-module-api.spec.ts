@@ -2,22 +2,28 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Module, Inject } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from '../../../src/auth/composition/auth.module';
-import { AUTH_MODULE_API_TOKEN, AuthModuleApi } from '../../../src/auth/public/contract/auth-module-api.interface';
-import { authDataSource, authDataSourceOptions } from '../../../src/auth/infrastructure/persistence/auth-data-source';
+import {
+  AUTH_MODULE_API_TOKEN,
+  AuthModuleApi,
+} from '../../../src/auth/public/contract/auth-module-api.interface';
+import {
+  authDataSource,
+  authDataSourceOptions,
+} from '../../../src/auth/infrastructure/persistence/auth-data-source';
 import { RegisterUserUseCase } from '../../../src/auth/application/commands/register-user/register-user.use-case';
 import { RegisterUserCommand } from '../../../src/auth/application/commands/register-user/register-user.command';
 import { LoginUseCase } from '../../../src/auth/application/commands/login/login.use-case';
 import { LoginCommand } from '../../../src/auth/application/commands/login/login.command';
-import { JwtIssuer, JWT_ISSUER_TOKEN } from '../../../src/auth/application/ports/jwt-issuer.interface';
+import {
+  JwtIssuer,
+  JWT_ISSUER_TOKEN,
+} from '../../../src/auth/application/ports/jwt-issuer.interface';
 import { UserRole } from '../../../src/auth/domain/model/user-account.aggregate';
 import * as crypto from 'crypto';
 
 // Minimal Foreign Consumer Module that ONLY imports AuthModule public contracts
 @Module({
-  imports: [
-    TypeOrmModule.forRoot({ ...authDataSourceOptions, name: 'auth' }),
-    AuthModule,
-  ],
+  imports: [TypeOrmModule.forRoot({ ...authDataSourceOptions, name: 'auth' }), AuthModule],
 })
 class ConsumerTestModule {
   constructor(

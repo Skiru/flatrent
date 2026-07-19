@@ -76,7 +76,6 @@ export class Tenancy extends AggregateRoot<string> {
     }
 
     this.status = TenancyStatus.ACTIVE;
-    this.incrementVersion();
 
     this.recordDomainEvent(
       new TenancyActivatedDomainEvent(
@@ -102,7 +101,6 @@ export class Tenancy extends AggregateRoot<string> {
     }
     this.status = TenancyStatus.TERMINATED;
     this.noticeDate = noticeDate;
-    this.incrementVersion();
   }
 
   public end(): void {
@@ -112,7 +110,6 @@ export class Tenancy extends AggregateRoot<string> {
       );
     }
     this.status = TenancyStatus.ENDED;
-    this.incrementVersion();
   }
 }
 export class TenancyDatesOverlapError extends Error {
