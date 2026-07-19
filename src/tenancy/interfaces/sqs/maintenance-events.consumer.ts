@@ -3,6 +3,7 @@ import { EntityManager } from 'typeorm';
 import { z } from 'zod';
 import { RentalUnitReadinessProjectionEntity } from '../../infrastructure/persistence/rental-unit-readiness-projection.entity';
 import { InboxEntity } from '../../infrastructure/persistence/inbox.entity';
+import { MetricsRegistry } from '../../../shared/infrastructure/metrics/metrics-registry';
 import * as crypto from 'crypto';
 
 // Zod schema for incoming maintenance events
@@ -11,6 +12,7 @@ const MaintenanceEventEnvelopeSchema = z.object({
   eventType: z.enum(['BlockingMaintenanceRequestOpened.v1', 'MaintenanceRequestResolved.v1']),
   eventVersion: z.number().optional().default(1),
   producer: z.literal('maintenance'),
+  occurredAt: z.string().optional(),
   payload: z.object({
     requestId: z.string().uuid(),
     rentalUnitId: z.string().uuid(),
@@ -24,6 +26,7 @@ export class MaintenanceEventsConsumer {
     private readonly sqsClient: SQSClient,
     private readonly defaultEntityManager: EntityManager,
     private readonly queueUrl: string,
+    private readonly metricsRegistry?: MetricsRegistry,
   ) {}
 
   public async pollAndProcess(): Promise<number> {
@@ -48,7 +51,12 @@ export class MaintenanceEventsConsumer {
         try {
           // 1. Validate envelope
           const envelope = MaintenanceEventEnvelopeSchema.parse(eventContent);
-          const { messageId, payload } = envelope;
+          const { messageId, payload, occurredAt } = envelope;
+
+          if (occurredAt) {
+            const lagMs = Date.now() - new Date(occurredAt).getTime();
+            this.metricsRegistry?.setQueueLag('maintenance-to-tenancy', lagMs);
+          }
 
           const payloadHash = crypto
             .createHash('sha256')
@@ -136,6 +144,7 @@ export class MaintenanceEventsConsumer {
               }),
             );
           } else {
+            this.metricsRegistry?.incrementInboxRetry();
             console.error(
               '[TENANCY_INBOX] [FAIL] Processing failed:',
               err instanceof Error ? err.message : String(err),

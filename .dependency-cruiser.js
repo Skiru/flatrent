@@ -14,7 +14,8 @@ module.exports = {
         pathNot: [
           '^src/$1/', // Can import within themselves
           '^src/([^/]+)/public/', // Can import public folders of other modules
-          '^src/([^/]+)/composition/' // Composition/wire-up can wire things
+          '^src/([^/]+)/composition/', // Composition/wire-up can wire things
+          '^src/shared/' // Shared module is globally accessible
         ]
       }
     },
@@ -29,7 +30,10 @@ module.exports = {
       from: { path: '^src/([^/]+)/domain/' },
       to: {
         path: '^src/',
-        pathNot: '^src/$1/domain/'
+        pathNot: [
+          '^src/$1/domain/',
+          '^src/shared/domain/'
+        ]
       }
     },
     {
@@ -49,7 +53,10 @@ module.exports = {
       from: { path: '^src/([^/]+)/application/' },
       to: {
         path: '^src/',
-        pathNot: '^src/$1/(domain|application)/'
+        pathNot: [
+          '^src/$1/(domain|application)/',
+          '^src/shared/(domain|application)/'
+        ]
       }
     },
     {

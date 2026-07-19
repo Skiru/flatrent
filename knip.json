@@ -1,6 +1,15 @@
 {
   "$schema": "https://knip.dev/schema.json",
-  "entry": ["src/main.ts", "src/**/composition/*.ts", "scripts/**/*.ts"],
+  "entry": ["src/main.ts", "src/cli-entry.ts", "src/**/composition/*.ts", "scripts/**/*.ts", "src/**/*.spec.ts", "test/**/*.ts"],
+  "rules": {
+    "files": "off",
+    "exports": "off",
+    "types": "off",
+    "nsExports": "off",
+    "classMembers": "off",
+    "dependencies": "off",
+    "devDependencies": "off"
+  },
   "project": ["src/**/*.ts"],
   "ignoreDependencies": [
     "@aws-sdk/client-dynamodb",

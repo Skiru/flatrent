@@ -1,6 +1,7 @@
 import { EntityManager } from 'typeorm';
 import { SNSClient, PublishCommand } from '@aws-sdk/client-sns';
 import { IntegrationOutboxEntity } from '../persistence/integration-outbox.entity';
+import { MetricsRegistry } from '../../../shared/infrastructure/metrics/metrics-registry';
 
 export class OutboxRelayService {
   private readonly maxAttempts = 5;
@@ -9,6 +10,7 @@ export class OutboxRelayService {
     private readonly defaultEntityManager: EntityManager,
     private readonly snsClient: SNSClient,
     private readonly topicArn: string,
+    private readonly metricsRegistry?: MetricsRegistry,
   ) {}
 
   /**
@@ -84,6 +86,9 @@ export class OutboxRelayService {
           .update({ messageId: item.messageId }, { status: 'PUBLISHED', lastError: null });
       } catch (err: unknown) {
         const nextStatus = item.attemptCount >= this.maxAttempts ? 'DEAD' : 'RETRY';
+        if (nextStatus === 'RETRY') {
+          this.metricsRegistry?.incrementOutboxRetry();
+        }
         await manager
           .getRepository(IntegrationOutboxEntity)
           .update(
