@@ -1,6 +1,6 @@
 import { SNSClient } from '@aws-sdk/client-sns';
 import { SQSClient } from '@aws-sdk/client-sqs';
-import { DynamoDBClient, ScanCommand } from '@aws-sdk/client-dynamodb';
+import { DynamoDBClient, ScanCommand, DeleteItemCommand } from '@aws-sdk/client-dynamodb';
 import { tenancyDataSource } from '../../../src/tenancy/infrastructure/persistence/tenancy-data-source';
 import { TypeOrmRentalUnitRepository } from '../../../src/tenancy/infrastructure/persistence/typeorm-rental-unit.repository';
 import { TypeOrmTenancyInvitationRepository } from '../../../src/tenancy/infrastructure/persistence/typeorm-tenancy-invitation.repository';
@@ -12,7 +12,10 @@ import { TenancyEventsConsumer } from '../../../src/maintenance/interfaces/sqs/t
 import { DynamoDBMaintenanceRepository } from '../../../src/maintenance/infrastructure/persistence/dynamodb-maintenance.repository';
 import { DynamoDBTenancyAccessAdapter } from '../../../src/maintenance/infrastructure/persistence/dynamodb-tenancy-access.adapter';
 import { OpenRequestUseCase } from '../../../src/maintenance/application/commands/open-request/open-request.use-case';
-import { OpenRequestCommand, ActiveTenancyRequiredError } from '../../../src/maintenance/application/commands/open-request/open-request.command';
+import {
+  OpenRequestCommand,
+  ActiveTenancyRequiredError,
+} from '../../../src/maintenance/application/commands/open-request/open-request.command';
 import { RentalUnit } from '../../../src/tenancy/domain/model/rental-unit.aggregate';
 import { TenancyInvitation } from '../../../src/tenancy/domain/model/tenancy-invitation.aggregate';
 import { HandoverProtocol } from '../../../src/tenancy/domain/model/handover-protocol.aggregate';
@@ -41,7 +44,8 @@ loadEnv();
 
 const AWS_ENDPOINT_URL = process.env.AWS_ENDPOINT_URL || 'http://localhost:4566';
 const AWS_REGION = process.env.AWS_REGION || 'us-east-1';
-const DYNAMODB_MAINTENANCE_TABLE = process.env.DYNAMODB_MAINTENANCE_TABLE || 'flatren-maintenance-requests';
+const DYNAMODB_MAINTENANCE_TABLE =
+  process.env.DYNAMODB_MAINTENANCE_TABLE || 'flatren-maintenance-requests';
 const SNS_INTEGRATION_EVENTS_TOPIC_ARN = process.env.SNS_INTEGRATION_EVENTS_TOPIC_ARN || '';
 const SQS_MAINTENANCE_QUEUE_URL = process.env.SQS_MAINTENANCE_QUEUE_URL || '';
 
@@ -88,8 +92,17 @@ describe('Asynchronous Tenancy-to-Maintenance Outbox-to-Inbox Integration Flow',
     uow = new TypeOrmUnitOfWork(tenancyDataSource.manager);
 
     // 3. Initialize background services
-    outboxRelay = new OutboxRelayService(tenancyDataSource.manager, snsClient, SNS_INTEGRATION_EVENTS_TOPIC_ARN);
-    inboxConsumer = new TenancyEventsConsumer(sqsClient, ddbClient, SQS_MAINTENANCE_QUEUE_URL, DYNAMODB_MAINTENANCE_TABLE);
+    outboxRelay = new OutboxRelayService(
+      tenancyDataSource.manager,
+      snsClient,
+      SNS_INTEGRATION_EVENTS_TOPIC_ARN,
+    );
+    inboxConsumer = new TenancyEventsConsumer(
+      sqsClient,
+      ddbClient,
+      SQS_MAINTENANCE_QUEUE_URL,
+      DYNAMODB_MAINTENANCE_TABLE,
+    );
 
     // 4. Initialize Maintenance DynamoDB interfaces
     ddbRequestRepo = new DynamoDBMaintenanceRepository(ddbClient, DYNAMODB_MAINTENANCE_TABLE);
@@ -114,19 +127,19 @@ describe('Asynchronous Tenancy-to-Maintenance Outbox-to-Inbox Integration Flow',
     await tenancyDataSource.query('TRUNCATE TABLE integration_outbox CASCADE');
 
     // Clear Maintenance DynamoDB table
-    const scanRes = await ddbClient.send(new ScanCommand({ TableName: DYNAMODB_MAINTENANCE_TABLE }));
+    const scanRes = await ddbClient.send(
+      new ScanCommand({ TableName: DYNAMODB_MAINTENANCE_TABLE }),
+    );
     const items = scanRes.Items || [];
     for (const item of items) {
-      const pk = item.PK.S;
-      const sk = item.SK.S;
-      await ddbClient.send({
-        middlewareStack: {} as any,
-        send: async () => {},
-        ...new Object(),
-        constructor: { name: 'DeleteItemCommand' },
-        TableName: DYNAMODB_MAINTENANCE_TABLE,
-        Key: { PK: { S: pk }, SK: { S: sk } },
-      } as any);
+      const pk = item.PK.S!;
+      const sk = item.SK.S!;
+      await ddbClient.send(
+        new DeleteItemCommand({
+          TableName: DYNAMODB_MAINTENANCE_TABLE,
+          Key: { PK: { S: pk }, SK: { S: sk } },
+        }),
+      );
     }
   });
 
@@ -150,7 +163,14 @@ describe('Asynchronous Tenancy-to-Maintenance Outbox-to-Inbox Integration Flow',
     invite.accept(new Date());
     await inviteRepo.save(invite);
 
-    const tenancy = new Tenancy(tenancyId, unitId, tenantId, new Date(), new Date(), TenancyStatus.RESERVED);
+    const tenancy = new Tenancy(
+      tenancyId,
+      unitId,
+      tenantId,
+      new Date(),
+      new Date(),
+      TenancyStatus.RESERVED,
+    );
     await tenancyRepo.save(tenancy);
 
     // 4. Complete handover protocol

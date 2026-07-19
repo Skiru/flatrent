@@ -173,3 +173,21 @@ export class MockTenancyAccessPort implements TenancyAccessPort {
     return units ? units.has(rentalUnitId) : false;
   }
 }
+
+export class MockRentalUnitReadinessPort {
+  public isReady = true;
+  public hasGap = false;
+
+  public async assertReadyToLease(_rentalUnitId: string): Promise<void> {
+    if (this.hasGap) {
+      throw new Error(
+        'The readiness projection is stale due to a detected background message gap. Fail-closed block active.',
+      );
+    }
+    if (!this.isReady) {
+      throw new Error(
+        'The rental unit has an active blocking maintenance issue and cannot be leased.',
+      );
+    }
+  }
+}

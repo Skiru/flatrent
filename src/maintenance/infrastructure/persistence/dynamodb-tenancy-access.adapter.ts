@@ -27,8 +27,11 @@ export class DynamoDBTenancyAccessAdapter implements TenancyAccessPort {
       }
 
       return res.Item.isActive?.BOOL || false;
-    } catch (err: any) {
-      console.error('DynamoDB TenancyAccess check failed:', err.message);
+    } catch (err: unknown) {
+      console.error(
+        'DynamoDB TenancyAccess check failed:',
+        err instanceof Error ? err.message : String(err),
+      );
       return false; // Fail-closed on database exceptions
     }
   }

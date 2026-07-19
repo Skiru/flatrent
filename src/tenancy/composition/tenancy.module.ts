@@ -20,6 +20,7 @@ import { TENANCY_INVITATION_REPOSITORY_TOKEN } from '../application/ports/tenanc
 import { HANDOVER_PROTOCOL_REPOSITORY_TOKEN } from '../application/ports/handover-protocol.repository';
 import { TENANCY_REPOSITORY_TOKEN } from '../application/ports/tenancy.repository';
 import { UNIT_OF_WORK_TOKEN } from '../../shared/application/ports/unit-of-work.interface';
+import { RENTAL_UNIT_READINESS_PORT_TOKEN } from '../application/ports/rental-unit-readiness.port';
 
 // Repository Implementations
 import { TypeOrmRentalUnitRepository } from '../infrastructure/persistence/typeorm-rental-unit.repository';
@@ -27,6 +28,7 @@ import { TypeOrmTenancyInvitationRepository } from '../infrastructure/persistenc
 import { TypeOrmHandoverProtocolRepository } from '../infrastructure/persistence/typeorm-handover-protocol.repository';
 import { TypeOrmTenancyRepository } from '../infrastructure/persistence/typeorm-tenancy.repository';
 import { TypeOrmUnitOfWork } from '../infrastructure/persistence/typeorm-unit-of-work';
+import { TypeOrmRentalUnitReadinessAdapter } from '../infrastructure/persistence/typeorm-rental-unit-readiness.adapter';
 
 // Shared
 import { ID_GENERATOR_TOKEN } from '../../shared/application/ports/id-generator.interface';
@@ -54,6 +56,7 @@ import { GiveNoticeNestHandler } from '../interfaces/cqrs/commands/give-notice.h
 import { EndTenancyNestHandler } from '../interfaces/cqrs/commands/end-tenancy.handler';
 import { GetTenancyNestHandler } from '../interfaces/cqrs/queries/get-tenancy.handler';
 import { ListLandlordRentalUnitsNestHandler } from '../interfaces/cqrs/queries/list-units.handler';
+import { TenancyController } from '../interfaces/http/tenancy.controller';
 
 const UseCaseProviders: Provider[] = [
   {
@@ -80,11 +83,12 @@ const UseCaseProviders: Provider[] = [
   },
   {
     provide: ActivateTenancyUseCase,
-    useFactory: (tenancyRepo, handoverRepo, idGen, clock) =>
-      new ActivateTenancyUseCase(tenancyRepo, handoverRepo, idGen, clock),
+    useFactory: (tenancyRepo, handoverRepo, readinessPort, idGen, clock) =>
+      new ActivateTenancyUseCase(tenancyRepo, handoverRepo, readinessPort, idGen, clock),
     inject: [
       TENANCY_REPOSITORY_TOKEN,
       HANDOVER_PROTOCOL_REPOSITORY_TOKEN,
+      RENTAL_UNIT_READINESS_PORT_TOKEN,
       ID_GENERATOR_TOKEN,
       SystemClock,
     ],
@@ -137,6 +141,11 @@ const RepositoryProviders: Provider[] = [
     useFactory: (em: EntityManager) => new TypeOrmUnitOfWork(em),
     inject: [getEntityManagerToken('tenancy')],
   },
+  {
+    provide: RENTAL_UNIT_READINESS_PORT_TOKEN,
+    useFactory: (em: EntityManager) => new TypeOrmRentalUnitReadinessAdapter(em),
+    inject: [getEntityManagerToken('tenancy')],
+  },
 ];
 
 const SharedProviders: Provider[] = [
@@ -177,6 +186,7 @@ const CQRSHandlers = [
       'tenancy', // bound to Named Connection 'tenancy'
     ),
   ],
+  controllers: [TenancyController],
   providers: [...UseCaseProviders, ...RepositoryProviders, ...SharedProviders, ...CQRSHandlers],
   exports: [
     RENTAL_UNIT_REPOSITORY_TOKEN,

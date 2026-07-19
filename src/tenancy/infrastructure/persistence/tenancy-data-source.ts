@@ -8,7 +8,9 @@ import { LocalEventDispatchEntity } from './local-event-dispatch.entity';
 import { DomainReactionDeliveryEntity } from './domain-reaction-delivery.entity';
 import { IntegrationOutboxEntity } from './integration-outbox.entity';
 import { InboxEntity } from './inbox.entity';
+import { RentalUnitReadinessProjectionEntity } from './rental-unit-readiness-projection.entity';
 import { CreateTenancySchema1721382500000 } from './migrations/1721382500000-create-tenancy-schema';
+import { CreateReadinessProjectionTable1721382600000 } from './migrations/1721382600000-create-readiness-projection-table';
 
 export const tenancyDataSourceOptions: DataSourceOptions = {
   type: 'postgres',
@@ -25,8 +27,9 @@ export const tenancyDataSourceOptions: DataSourceOptions = {
     DomainReactionDeliveryEntity,
     IntegrationOutboxEntity,
     InboxEntity,
+    RentalUnitReadinessProjectionEntity,
   ],
-  migrations: [CreateTenancySchema1721382500000],
+  migrations: [CreateTenancySchema1721382500000, CreateReadinessProjectionTable1721382600000],
   synchronize: false,
   logging: false,
 };

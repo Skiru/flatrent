@@ -1,10 +1,16 @@
 import {
   DynamoDBClient,
   GetItemCommand,
-  PutItemCommand,
+  TransactWriteItemsCommand,
+  TransactWriteItem,
+  AttributeValue,
 } from '@aws-sdk/client-dynamodb';
 import { MaintenanceRequestRepository } from '../../application/ports/maintenance-request.repository';
-import { MaintenanceRequest, MaintenanceStatus } from '../../domain/model/maintenance-request.aggregate';
+import {
+  MaintenanceRequest,
+  MaintenanceStatus,
+} from '../../domain/model/maintenance-request.aggregate';
+import * as crypto from 'crypto';
 
 export class DynamoDBMaintenanceRepository implements MaintenanceRequestRepository {
   private readonly maxTransactionSize = 4 * 1024 * 1024; // 4 MB
@@ -51,8 +57,8 @@ export class DynamoDBMaintenanceRepository implements MaintenanceRequestReposito
       );
       domain.setVersion(version);
       return domain;
-    } catch (err: any) {
-      console.error('DynamoDB findById error:', err.message);
+    } catch (err: unknown) {
+      console.error('DynamoDB findById error:', err instanceof Error ? err.message : String(err));
       return null;
     }
   }
@@ -61,8 +67,8 @@ export class DynamoDBMaintenanceRepository implements MaintenanceRequestReposito
     const pk = `REQUEST#${request.id}`;
     const currentVersion = request.getVersion();
 
-    // 1. Map to DynamoDB Attributes
-    const item: Record<string, any> = {
+    // 1. Map Main Request Item
+    const item: Record<string, AttributeValue> = {
       PK: { S: pk },
       SK: { S: pk },
       id: { S: request.id },
@@ -76,50 +82,130 @@ export class DynamoDBMaintenanceRepository implements MaintenanceRequestReposito
     };
 
     if (request.getAssignedHandymanId()) {
-      item.assignedHandymanId = { S: request.getAssignedHandymanId() };
+      item.assignedHandymanId = { S: request.getAssignedHandymanId() as string };
     }
     if (request.getVisitDate()) {
       item.visitDate = { S: request.getVisitDate()!.toISOString() };
     }
     if (request.getResolutionDescription()) {
-      item.resolutionDescription = { S: request.getResolutionDescription() };
+      item.resolutionDescription = { S: request.getResolutionDescription() as string };
     }
 
     // 2. Preflight Transaction-Budget Guard Check
     const serializedSize = Buffer.byteLength(JSON.stringify(item), 'utf-8');
     if (serializedSize > this.maxTransactionSize) {
-      throw new Error(`Transaction Budget Exceeded: Payload size ${serializedSize} bytes exceeds the 4 MB DynamoDB limit.`);
+      throw new Error(
+        `Transaction Budget Exceeded: Payload size ${serializedSize} bytes exceeds the 4 MB DynamoDB limit.`,
+      );
     }
 
-    // 3. Write to DynamoDB with Optimistic Concurrency Control (OCC)
+    // Determine outbox integration event type
+    let outboxItem: Record<string, AttributeValue> | null = null;
+    const isBlocking = request.getIsEmergency(); // Emergencies are treated as blocking in Flatren
+    const messageId = crypto.randomUUID();
+
+    if (currentVersion === 0 && request.getStatus() === MaintenanceStatus.OPENED) {
+      // 1. opened blocking request outbox
+      outboxItem = {
+        PK: { S: `OUTBOX#${messageId}` },
+        SK: { S: `OUTBOX#${messageId}` },
+        messageId: { S: messageId },
+        eventType: { S: 'BlockingMaintenanceRequestOpened.v1' },
+        eventVersion: { N: '1' },
+        producer: { S: 'maintenance' },
+        sourceDomainEventId: { S: messageId },
+        aggregateType: { S: 'MaintenanceRequest' },
+        aggregateId: { S: request.id },
+        aggregateVersion: { N: String(currentVersion + 1) },
+        occurredAt: { S: new Date().toISOString() },
+        status: { S: 'PENDING' },
+        attemptCount: { N: '0' },
+        payloadJson: {
+          S: JSON.stringify({
+            requestId: request.id,
+            rentalUnitId: request.getRentalUnitId(),
+            isBlocking,
+            version: currentVersion + 1, // version is 1 for initial opened event
+          }),
+        },
+      };
+    } else if (request.getStatus() === MaintenanceStatus.RESOLVED) {
+      // 2. resolved request outbox
+      outboxItem = {
+        PK: { S: `OUTBOX#${messageId}` },
+        SK: { S: `OUTBOX#${messageId}` },
+        messageId: { S: messageId },
+        eventType: { S: 'MaintenanceRequestResolved.v1' },
+        eventVersion: { N: '1' },
+        producer: { S: 'maintenance' },
+        sourceDomainEventId: { S: messageId },
+        aggregateType: { S: 'MaintenanceRequest' },
+        aggregateId: { S: request.id },
+        aggregateVersion: { N: String(currentVersion + 1) },
+        occurredAt: { S: new Date().toISOString() },
+        status: { S: 'PENDING' },
+        attemptCount: { N: '0' },
+        payloadJson: {
+          S: JSON.stringify({
+            requestId: request.id,
+            rentalUnitId: request.getRentalUnitId(),
+            isBlocking: false,
+            version: currentVersion + 1, // version increments sequence
+          }),
+        },
+      };
+    }
+
+    // 3. Compile transaction items
+    const transactItems: TransactWriteItem[] = [];
+
+    if (currentVersion === 0) {
+      transactItems.push({
+        Put: {
+          TableName: this.tableName,
+          Item: item,
+          ConditionExpression: 'attribute_not_exists(PK)',
+        },
+      });
+    } else {
+      transactItems.push({
+        Put: {
+          TableName: this.tableName,
+          Item: item,
+          ConditionExpression: 'version = :expectedVersion',
+          ExpressionAttributeValues: {
+            ':expectedVersion': { N: String(currentVersion) },
+          },
+        },
+      });
+    }
+
+    if (outboxItem) {
+      transactItems.push({
+        Put: {
+          TableName: this.tableName,
+          Item: outboxItem,
+        },
+      });
+    }
+
+    // 4. Execute atomic transaction in DynamoDB
     try {
-      if (currentVersion === 0) {
-        // First insert: expect item to not exist
-        await this.client.send(
-          new PutItemCommand({
-            TableName: this.tableName,
-            Item: item,
-            ConditionExpression: 'attribute_not_exists(PK)',
-          }),
-        );
-      } else {
-        // Update: expect database version to match aggregate version
-        await this.client.send(
-          new PutItemCommand({
-            TableName: this.tableName,
-            Item: item,
-            ConditionExpression: 'version = :expectedVersion',
-            ExpressionAttributeValues: {
-              ':expectedVersion': { N: String(currentVersion) },
-            },
-          }),
-        );
-      }
-      // On successful write, align local version
+      await this.client.send(
+        new TransactWriteItemsCommand({
+          TransactItems: transactItems,
+        }),
+      );
       request.incrementVersion();
-    } catch (err: any) {
-      if (err.name === 'ConditionalCheckFailedException') {
-        throw new Error('Optimistic Lock Conflict: Stale version detected. DynamoDB update blocked.');
+    } catch (err: unknown) {
+      if (
+        err instanceof Error &&
+        err.name === 'TransactionCanceledException' &&
+        err.message?.includes('ConditionalCheckFailed')
+      ) {
+        throw new Error(
+          'Optimistic Lock Conflict: Stale version detected. DynamoDB update blocked.',
+        );
       }
       throw err;
     }

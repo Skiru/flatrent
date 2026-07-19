@@ -79,16 +79,17 @@ export class OutboxRelayService {
         );
 
         // Update database row on successful publish
-        await manager.getRepository(IntegrationOutboxEntity).update(
-          { messageId: item.messageId },
-          { status: 'PUBLISHED', lastError: null },
-        );
-      } catch (err: any) {
+        await manager
+          .getRepository(IntegrationOutboxEntity)
+          .update({ messageId: item.messageId }, { status: 'PUBLISHED', lastError: null });
+      } catch (err: unknown) {
         const nextStatus = item.attemptCount >= this.maxAttempts ? 'DEAD' : 'RETRY';
-        await manager.getRepository(IntegrationOutboxEntity).update(
-          { messageId: item.messageId },
-          { status: nextStatus, lastError: err.message || String(err) },
-        );
+        await manager
+          .getRepository(IntegrationOutboxEntity)
+          .update(
+            { messageId: item.messageId },
+            { status: nextStatus, lastError: err instanceof Error ? err.message : String(err) },
+          );
       }
     }
 

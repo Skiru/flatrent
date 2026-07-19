@@ -95,7 +95,9 @@ export class TenancyEventsConsumer {
             }),
           );
 
-          console.log(`[INBOX] [SUCCESS] Projected access snapshot for tenant ${payload.tenantId} on unit ${payload.rentalUnitId}`);
+          console.log(
+            `[INBOX] [SUCCESS] Projected access snapshot for tenant ${payload.tenantId} on unit ${payload.rentalUnitId}`,
+          );
 
           // 3. Delete from SQS only after DynamoDB write commits successfully!
           await this.sqsClient.send(
@@ -104,8 +106,11 @@ export class TenancyEventsConsumer {
               ReceiptHandle: msg.ReceiptHandle!,
             }),
           );
-        } catch (err: any) {
-          if (err.name === 'ConditionalCheckFailedException' || err.message?.includes('Conditional')) {
+        } catch (err: unknown) {
+          if (
+            err instanceof Error &&
+            (err.name === 'ConditionalCheckFailedException' || err.message?.includes('Conditional'))
+          ) {
             console.warn(`[INBOX] [WARN] Duplicate message ${eventContent.messageId} skipped.`);
             // Message already processed, safe to delete from SQS
             await this.sqsClient.send(
@@ -115,15 +120,18 @@ export class TenancyEventsConsumer {
               }),
             );
           } else {
-            console.error('[INBOX] [FAIL] Inbox processing failed:', err.message);
+            console.error(
+              '[INBOX] [FAIL] Inbox processing failed:',
+              err instanceof Error ? err.message : String(err),
+            );
             // Leave in SQS to trigger redrive policy to DLQ!
           }
         }
       }
 
       return messages.length;
-    } catch (err: any) {
-      console.error('SQS Consumer poll error:', err.message);
+    } catch (err: unknown) {
+      console.error('SQS Consumer poll error:', err instanceof Error ? err.message : String(err));
       return 0;
     }
   }

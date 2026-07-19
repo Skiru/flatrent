@@ -1,5 +1,6 @@
 import { TenancyRepository } from '../../ports/tenancy.repository';
 import { HandoverProtocolRepository } from '../../ports/handover-protocol.repository';
+import { RentalUnitReadinessPort } from '../../ports/rental-unit-readiness.port';
 import { ActivateTenancyCommand, ActivateTenancyResult } from './activate-tenancy.command';
 import { HandoverProtocolNotFoundError } from '../confirm-handover/confirm-handover.use-case';
 import { TenancyNotFoundError } from '../confirm-handover/confirm-handover.command';
@@ -10,6 +11,7 @@ export class ActivateTenancyUseCase {
   constructor(
     private readonly tenancyRepository: TenancyRepository,
     private readonly handoverRepository: HandoverProtocolRepository,
+    private readonly readinessPort: RentalUnitReadinessPort,
     private readonly idGenerator: IdGenerator,
     private readonly clock: Clock,
   ) {}
@@ -19,6 +21,9 @@ export class ActivateTenancyUseCase {
     if (!tenancy) {
       throw new TenancyNotFoundError();
     }
+
+    // Fail-closed readiness and gap check before activating the lease
+    await this.readinessPort.assertReadyToLease(tenancy.getRentalUnitId());
 
     const handover = await this.handoverRepository.findById(command.handoverProtocolId);
     if (!handover) {

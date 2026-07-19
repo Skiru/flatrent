@@ -22,6 +22,7 @@ import {
   MockTenancyInvitationRepository,
   MockTenancyRepository,
   MockHandoverProtocolRepository,
+  MockRentalUnitReadinessPort,
   MockClock,
   MockIdGenerator,
 } from '../../shared/application/test-utils';
@@ -31,6 +32,7 @@ describe('Tenancy Context Application Use Cases', () => {
   let inviteRepo: MockTenancyInvitationRepository;
   let tenancyRepo: MockTenancyRepository;
   let handoverRepo: MockHandoverProtocolRepository;
+  let readinessPort: MockRentalUnitReadinessPort;
   let clock: MockClock;
   let idGen: MockIdGenerator;
 
@@ -49,6 +51,7 @@ describe('Tenancy Context Application Use Cases', () => {
     inviteRepo = new MockTenancyInvitationRepository();
     tenancyRepo = new MockTenancyRepository();
     handoverRepo = new MockHandoverProtocolRepository();
+    readinessPort = new MockRentalUnitReadinessPort();
     clock = new MockClock();
     idGen = new MockIdGenerator();
 
@@ -56,7 +59,13 @@ describe('Tenancy Context Application Use Cases', () => {
     inviteTenantUseCase = new InviteTenantUseCase(inviteRepo, unitRepo);
     acceptInviteUseCase = new AcceptInvitationUseCase(inviteRepo, tenancyRepo, clock);
     confirmHandoverUseCase = new ConfirmHandoverUseCase(handoverRepo, tenancyRepo);
-    activateTenancyUseCase = new ActivateTenancyUseCase(tenancyRepo, handoverRepo, idGen, clock);
+    activateTenancyUseCase = new ActivateTenancyUseCase(
+      tenancyRepo,
+      handoverRepo,
+      readinessPort,
+      idGen,
+      clock,
+    );
     giveNoticeUseCase = new GiveNoticeUseCase(tenancyRepo);
     endTenancyUseCase = new EndTenancyUseCase(tenancyRepo);
     getTenancyUseCase = new GetTenancyUseCase(tenancyRepo);
