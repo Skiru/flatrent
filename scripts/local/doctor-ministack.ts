@@ -96,12 +96,15 @@ async function testRedis(): Promise<boolean> {
 
 async function testDynamoDB(ddb: DynamoDBClient): Promise<boolean> {
   const testId = `req-doc-${Date.now()}`;
+  const pk = `REQUEST#${testId}`;
   try {
     // PutItem
     await ddb.send(
       new PutItemCommand({
         TableName: DYNAMODB_MAINTENANCE_TABLE,
         Item: {
+          PK: { S: pk },
+          SK: { S: pk },
           id: { S: testId },
           rentalUnitId: { S: 'unit-999' },
           description: { S: 'Doctor script test request' },
@@ -114,7 +117,10 @@ async function testDynamoDB(ddb: DynamoDBClient): Promise<boolean> {
     const getRes = await ddb.send(
       new GetItemCommand({
         TableName: DYNAMODB_MAINTENANCE_TABLE,
-        Key: { id: { S: testId } },
+        Key: {
+          PK: { S: pk },
+          SK: { S: pk },
+        },
       }),
     );
     if (!getRes.Item || getRes.Item.id?.S !== testId) {
@@ -126,7 +132,10 @@ async function testDynamoDB(ddb: DynamoDBClient): Promise<boolean> {
     await ddb.send(
       new DeleteItemCommand({
         TableName: DYNAMODB_MAINTENANCE_TABLE,
-        Key: { id: { S: testId } },
+        Key: {
+          PK: { S: pk },
+          SK: { S: pk },
+        },
       }),
     );
     console.log('  [PASS] DynamoDB DeleteItem cleanup success');

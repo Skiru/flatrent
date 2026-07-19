@@ -39,11 +39,10 @@ export class TypeOrmHandoverProtocolRepository implements HandoverProtocolReposi
       }
       entity.version = currentVersion + 1;
       await repo.save(entity);
+      handover.incrementVersion(); // increment ONLY on update!
     } else {
       entity.version = 0;
       await repo.save(entity);
     }
-
-    handover.incrementVersion();
   }
 }

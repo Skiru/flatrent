@@ -153,10 +153,12 @@ async function bootstrapDynamoDB(ddb: DynamoDBClient) {
       new CreateTableCommand({
         TableName: DYNAMODB_TABLE,
         KeySchema: [
-          { AttributeName: 'id', KeyType: 'HASH' }, // Primary Key (requestId)
+          { AttributeName: 'PK', KeyType: 'HASH' },
+          { AttributeName: 'SK', KeyType: 'RANGE' },
         ],
         AttributeDefinitions: [
-          { AttributeName: 'id', AttributeType: 'S' },
+          { AttributeName: 'PK', AttributeType: 'S' },
+          { AttributeName: 'SK', AttributeType: 'S' },
           { AttributeName: 'rentalUnitId', AttributeType: 'S' },
         ],
         GlobalSecondaryIndexes: [
@@ -164,7 +166,7 @@ async function bootstrapDynamoDB(ddb: DynamoDBClient) {
             IndexName: 'RentalUnitIndex',
             KeySchema: [
               { AttributeName: 'rentalUnitId', KeyType: 'HASH' },
-              { AttributeName: 'id', KeyType: 'RANGE' },
+              { AttributeName: 'PK', KeyType: 'RANGE' },
             ],
             Projection: { ProjectionType: 'ALL' },
           },

@@ -48,11 +48,10 @@ export class TypeOrmRentalUnitRepository implements RentalUnitRepository {
       }
       entity.version = currentVersion + 1;
       await repo.save(entity);
+      unit.incrementVersion(); // increment ONLY on update!
     } else {
       entity.version = 0;
       await repo.save(entity);
     }
-
-    unit.incrementVersion();
   }
 }

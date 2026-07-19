@@ -61,6 +61,7 @@ export class TypeOrmTenancyRepository implements TenancyRepository {
       }
       entity.version = currentVersion + 1;
       await repo.save(entity);
+      tenancy.incrementVersion(); // increment ONLY on update!
     } else {
       entity.version = 0;
       await repo.save(entity);
@@ -78,8 +79,6 @@ export class TypeOrmTenancyRepository implements TenancyRepository {
       );
       tenancy.acknowledgeCommittedDomainEvents(pendingEvents.map((e) => e.eventId));
     }
-
-    tenancy.incrementVersion();
   }
 }
 export const TYPEORM_TENANCY_REPOSITORY_TOKEN = 'TypeOrmTenancyRepository';

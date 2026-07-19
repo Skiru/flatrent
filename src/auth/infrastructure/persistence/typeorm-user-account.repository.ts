@@ -50,6 +50,7 @@ export class TypeOrmUserAccountRepository implements UserAccountRepository {
       }
       entity.version = currentVersion + 1;
       await repo.save(entity);
+      user.incrementVersion(); // align version on domain object (only on update!)
     } else {
       entity.version = 0;
       await repo.save(entity);
@@ -70,8 +71,6 @@ export class TypeOrmUserAccountRepository implements UserAccountRepository {
       // So after a successful SQL write, we acknowledge them.
       user.acknowledgeCommittedDomainEvents(pendingEvents.map((e) => e.eventId));
     }
-
-    user.incrementVersion(); // align version on domain object
   }
 }
 export const TYPEORM_USER_ACCOUNT_REPOSITORY_TOKEN = 'TypeOrmUserAccountRepository';

@@ -39,11 +39,10 @@ export class TypeOrmTenancyInvitationRepository implements TenancyInvitationRepo
       }
       entity.version = currentVersion + 1;
       await repo.save(entity);
+      invitation.incrementVersion(); // increment ONLY on update!
     } else {
       entity.version = 0;
       await repo.save(entity);
     }
-
-    invitation.incrementVersion();
   }
 }

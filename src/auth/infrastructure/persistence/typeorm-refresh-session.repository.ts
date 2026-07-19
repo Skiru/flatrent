@@ -40,6 +40,7 @@ export class TypeOrmRefreshSessionRepository implements RefreshSessionRepository
       }
       entity.version = currentVersion + 1;
       await repo.save(entity);
+      session.incrementVersion(); // Increment ONLY on update!
     } else {
       entity.version = 0;
       await repo.save(entity);
@@ -57,8 +58,6 @@ export class TypeOrmRefreshSessionRepository implements RefreshSessionRepository
       );
       session.acknowledgeCommittedDomainEvents(pendingEvents.map((e) => e.eventId));
     }
-
-    session.incrementVersion();
   }
 
   public async revokeAllByUserId(

@@ -53,11 +53,9 @@ export class TenancyInvitation extends AggregateRoot<string> {
     }
     if (this.isExpired(now)) {
       this.status = InvitationStatus.EXPIRED;
-      this.incrementVersion();
       throw new Error('Invitation has expired');
     }
     this.status = InvitationStatus.ACCEPTED;
-    this.incrementVersion();
   }
 
   public reject(): void {
@@ -65,6 +63,5 @@ export class TenancyInvitation extends AggregateRoot<string> {
       throw new Error(`Invitation is not pending, current status: ${this.status}`);
     }
     this.status = InvitationStatus.REJECTED;
-    this.incrementVersion();
   }
 }
