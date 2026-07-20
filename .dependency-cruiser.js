@@ -2,11 +2,24 @@
 module.exports = {
   forbidden: [
     /* -------------------------------------------------------------
-       1. Strict Bounded Context boundaries (Auth, Tenancy, Maintenance)
+       1. Shared Layer Boundaries
+       ------------------------------------------------------------- */
+    {
+      name: 'shared-cannot-import-modules',
+      comment: 'The shared layer must be completely decoupled and must not import auth, tenancy, or maintenance contexts.',
+      severity: 'error',
+      from: { path: '^src/shared/' },
+      to: {
+        path: '^src/(auth|tenancy|maintenance)/',
+      },
+    },
+
+    /* -------------------------------------------------------------
+       2. Strict Bounded Context boundaries (Auth, Tenancy, Maintenance)
        ------------------------------------------------------------- */
     {
       name: 'no-cross-module-internal-imports',
-      comment: 'Modules must only communicate through their public boundaries, never directly import internals from other modules.',
+      comment: 'Modules must only communicate through their public boundaries, never directly import internals or composition of other modules.',
       severity: 'error',
       from: { path: '^src/([^/]+)/' },
       to: {
@@ -14,14 +27,13 @@ module.exports = {
         pathNot: [
           '^src/$1/', // Can import within themselves
           '^src/([^/]+)/public/', // Can import public folders of other modules
-          '^src/([^/]+)/composition/', // Composition/wire-up can wire things
-          '^src/shared/' // Shared module is globally accessible
-        ]
-      }
+          '^src/shared/', // Shared module is globally accessible
+        ],
+      },
     },
 
     /* -------------------------------------------------------------
-       2. Strict Onion Architecture boundaries (Domain, Application, Interfaces, Infrastructure)
+       3. Strict Onion Architecture boundaries (Domain, Application, Interfaces, Infrastructure)
        ------------------------------------------------------------- */
     {
       name: 'domain-cannot-depend-on-anything-outside',
@@ -32,9 +44,9 @@ module.exports = {
         path: '^src/',
         pathNot: [
           '^src/$1/domain/',
-          '^src/shared/domain/'
-        ]
-      }
+          '^src/shared/domain/',
+        ],
+      },
     },
     {
       name: 'domain-cannot-depend-on-frameworks',
@@ -43,8 +55,8 @@ module.exports = {
       from: { path: '^src/([^/]+)/domain/' },
       to: {
         dependencyTypes: ['npm'],
-        path: '@nestjs/|typeorm|@aws-sdk/|ioredis|passport|express'
-      }
+        path: '@nestjs/|typeorm|@aws-sdk/|ioredis|passport|express',
+      },
     },
     {
       name: 'application-cannot-depend-on-outer-layers',
@@ -55,9 +67,9 @@ module.exports = {
         path: '^src/',
         pathNot: [
           '^src/$1/(domain|application)/',
-          '^src/shared/(domain|application)/'
-        ]
-      }
+          '^src/shared/(domain|application)/',
+        ],
+      },
     },
     {
       name: 'application-cannot-depend-on-frameworks',
@@ -66,8 +78,8 @@ module.exports = {
       from: { path: '^src/([^/]+)/application/' },
       to: {
         dependencyTypes: ['npm'],
-        path: '@nestjs/|typeorm|@aws-sdk/|ioredis|passport|express'
-      }
+        path: '@nestjs/|typeorm|@aws-sdk/|ioredis|passport|express',
+      },
     },
     {
       name: 'public-cannot-depend-on-outer-layers',
@@ -76,22 +88,22 @@ module.exports = {
       from: { path: '^src/([^/]+)/public/' },
       to: {
         path: '^src/',
-        pathNot: '^src/$1/(domain|application|public)/'
-      }
-    }
+        pathNot: '^src/$1/(domain|application|public)/',
+      },
+    },
   ],
   options: {
     doNotFollow: {
-      path: 'node_modules'
+      path: 'node_modules',
     },
     tsConfig: {
-      fileName: 'tsconfig.json'
+      fileName: 'tsconfig.json',
     },
     reporterOptions: {
       text: {
-        highlightFocused: true
-      }
-    }
-  }
+        highlightFocused: true,
+      },
+    },
+  },
 };
 //

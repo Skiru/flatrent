@@ -1,0 +1,52 @@
+{
+  "catalog": [
+    {
+      "eventType": "TenancyActivated.v1",
+      "eventVersion": 1,
+      "producer": "tenancy",
+      "consumers": [
+        "maintenance"
+      ],
+      "outbox": "integration_outbox (PostgreSQL table)",
+      "topic": "arn:aws:sns:us-east-1:000000000000:flatren-integration-events",
+      "queue": "flatren-maintenance-tenancy-events",
+      "inbox": "flatren-maintenance-requests table (DynamoDB INBOX# prefix)",
+      "schema": "zod schema in src/maintenance/interfaces/sqs/tenancy-events.consumer.ts",
+      "duplicateTest": "test/faults/faults.spec.ts (Fault 12)",
+      "gapTest": "N/A (un-ordered, snapshot based access)",
+      "poisonTest": "test/faults/faults.spec.ts (Fault 16)"
+    },
+    {
+      "eventType": "BlockingMaintenanceRequestOpened.v1",
+      "eventVersion": 1,
+      "producer": "maintenance",
+      "consumers": [
+        "tenancy"
+      ],
+      "outbox": "DynamoDB Table (PK OUTBOX# messageId)",
+      "topic": "arn:aws:sns:us-east-1:000000000000:flatren-integration-events",
+      "queue": "flatren-tenancy-maintenance-events",
+      "inbox": "inbox (PostgreSQL table)",
+      "schema": "zod schema in src/tenancy/interfaces/sqs/maintenance-events.consumer.ts",
+      "duplicateTest": "test/faults/faults.spec.ts (Fault 12, 15)",
+      "gapTest": "test/faults/faults.spec.ts (Fault 13)",
+      "poisonTest": "test/faults/faults.spec.ts (Fault 16)"
+    },
+    {
+      "eventType": "MaintenanceRequestResolved.v1",
+      "eventVersion": 1,
+      "producer": "maintenance",
+      "consumers": [
+        "tenancy"
+      ],
+      "outbox": "DynamoDB Table (PK OUTBOX# messageId)",
+      "topic": "arn:aws:sns:us-east-1:000000000000:flatren-integration-events",
+      "queue": "flatren-tenancy-maintenance-events",
+      "inbox": "inbox (PostgreSQL table)",
+      "schema": "zod schema in src/tenancy/interfaces/sqs/maintenance-events.consumer.ts",
+      "duplicateTest": "test/e2e/messaging/maintenance-tenancy-reverse-flow.spec.ts",
+      "gapTest": "test/e2e/messaging/maintenance-tenancy-reverse-flow.spec.ts",
+      "poisonTest": "test/faults/faults.spec.ts (Fault 16)"
+    }
+  ]
+}

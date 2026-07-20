@@ -56,12 +56,11 @@ export class TypeOrmTenancyRepository implements TenancyRepository {
     const currentVersion = tenancy.getVersion();
     const existing = await repo.findOne({ where: { id: tenancy.id } });
     if (existing) {
-      if (existing.version !== currentVersion) {
+      if (existing.version !== currentVersion - 1) {
         throw new Error('Optimistic Lock Conflict: version mismatch.');
       }
-      entity.version = currentVersion + 1;
+      entity.version = currentVersion;
       await repo.save(entity);
-      tenancy.incrementVersion(); // increment ONLY on update!
     } else {
       entity.version = 0;
       await repo.save(entity);

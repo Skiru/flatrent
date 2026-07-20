@@ -1,0 +1,35 @@
+{
+  "catalog": [
+    {
+      "module": "auth",
+      "apiName": "AuthModuleApi",
+      "interfaceFile": "src/auth/public/contract/auth-module-api.interface.ts",
+      "implementationFile": "src/auth/interfaces/module-api/auth-module-api.facade.ts",
+      "methods": [
+        {
+          "name": "authenticateAccessToken",
+          "inputs": [
+            "token: string"
+          ],
+          "output": "Promise<ActorSnapshot>",
+          "routing": "JWT Verifier and QueryBus (GetCurrentActorQuery)",
+          "errorHandling": "Throws JsonWebTokenError / TokenExpiredError on invalid token, maps to public exceptions.",
+          "failClosed": "Fail-closed on any verification failure (rejects authentication)."
+        },
+        {
+          "name": "getActorSnapshot",
+          "inputs": [
+            "userId: string"
+          ],
+          "output": "Promise<ActorSnapshot>",
+          "routing": "QueryBus (GetCurrentActorQuery)",
+          "errorHandling": "Throws ActorNotFoundError if user does not exist.",
+          "failClosed": "Returns undefined or throws on missing database record."
+        }
+      ],
+      "timeoutMs": 1000,
+      "correlationIdHandling": "Propagated via nest context and AsyncLocalStorage where active.",
+      "tests": "test/e2e/module-api/auth-module-api.spec.ts, test/faults/faults.spec.ts (Fault 21)"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "catalog": [
+    {
+      "eventType": "UserAccount.UserRegisteredDomainEvent",
+      "module": "auth",
+      "producerAggregate": "UserAccount",
+      "journaled": true,
+      "localReactions": [
+        "AuditSecurityAlertReaction"
+      ],
+      "reactionClassification": "best-effort observer",
+      "integrationMapping": "N/A",
+      "tests": "test/integration/auth-persistence.spec.ts"
+    },
+    {
+      "eventType": "UserAccount.PasswordChangedDomainEvent",
+      "module": "auth",
+      "producerAggregate": "UserAccount",
+      "journaled": true,
+      "localReactions": [
+        "AuditSecurityAlertReaction"
+      ],
+      "reactionClassification": "reliable local reaction",
+      "integrationMapping": "N/A",
+      "tests": "test/integration/auth-persistence.spec.ts, test/faults/faults.spec.ts (Fault 7 & 8)"
+    },
+    {
+      "eventType": "Tenancy.TenancyActivatedDomainEvent",
+      "module": "tenancy",
+      "producerAggregate": "Tenancy",
+      "journaled": true,
+      "localReactions": [
+        "CrossModuleIntegrationReaction"
+      ],
+      "reactionClassification": "cross-module integration reaction",
+      "integrationMapping": "TenancyActivated.v1",
+      "tests": "test/integration/tenancy-persistence.spec.ts, test/e2e/messaging/tenancy-maintenance-flow.spec.ts"
+    }
+  ]
+}

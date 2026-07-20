@@ -98,7 +98,7 @@ export class MaintenanceEventsConsumer {
               const newProj = new RentalUnitReadinessProjectionEntity();
               newProj.rentalUnitId = payload.rentalUnitId;
               newProj.isReady = true;
-              newProj.lastProcessedVersion = 0;
+              newProj.lastProcessedVersion = -1;
               newProj.status = 'ACTIVE';
               projection = newProj;
             }

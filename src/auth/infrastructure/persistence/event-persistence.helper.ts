@@ -8,7 +8,6 @@ import { AUTH_RELIABLE_REACTIONS_CATALOG } from './reliable-reactions-catalog';
 import { UserRegisteredPayload } from '../../domain/model/user-account.aggregate';
 
 interface RichDomainEvent extends DomainEvent {
-  readonly aggregateVersion?: number;
   readonly actorId?: string;
 }
 
@@ -42,7 +41,7 @@ export class EventPersistenceHelper {
       journalEntry.aggregateType = event.aggregateType;
       journalEntry.aggregateId = event.aggregateId;
       // We number aggregate_version and event_index sequence to satisfy UNIQUE constraint!
-      journalEntry.aggregateVersion = (event as RichDomainEvent).aggregateVersion || 1;
+      journalEntry.aggregateVersion = event.aggregateVersion;
       journalEntry.eventIndex = index;
       journalEntry.occurredAt = occurredDate;
       journalEntry.actorId = (event as RichDomainEvent).actorId || null;
@@ -92,7 +91,7 @@ export class EventPersistenceHelper {
         outboxRow.sourceDomainEventId = event.eventId;
         outboxRow.aggregateType = event.aggregateType;
         outboxRow.aggregateId = event.aggregateId;
-        outboxRow.aggregateVersion = (event as RichDomainEvent).aggregateVersion || 1;
+        outboxRow.aggregateVersion = event.aggregateVersion;
         outboxRow.occurredAt = occurredDate;
         outboxRow.payloadJson = JSON.stringify({
           userId: event.aggregateId,

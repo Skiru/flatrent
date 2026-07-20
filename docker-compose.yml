@@ -7,9 +7,9 @@ services:
     ports:
       - "4566:4566"
     environment:
-      PERSIST_STATE: "1"
-      S3_PERSIST: "1"
-      RDS_PERSIST: "1"
+      PERSIST_STATE: "0"
+      S3_PERSIST: "0"
+      RDS_PERSIST: "0"
       LOG_LEVEL: "INFO"
       RDS_BASE_PORT: "15432"
       ELASTICACHE_BASE_PORT: "16379"

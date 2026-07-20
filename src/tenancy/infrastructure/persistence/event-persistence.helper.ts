@@ -6,7 +6,6 @@ import { IntegrationOutboxEntity } from './integration-outbox.entity';
 import { TenancyActivatedPayload } from '../../domain/events/tenancy-activated.event';
 
 interface RichDomainEvent extends DomainEvent {
-  readonly aggregateVersion?: number;
   readonly actorId?: string;
 }
 
@@ -38,7 +37,7 @@ export class EventPersistenceHelper {
       journalEntry.module = 'tenancy';
       journalEntry.aggregateType = event.aggregateType;
       journalEntry.aggregateId = event.aggregateId;
-      journalEntry.aggregateVersion = (event as RichDomainEvent).aggregateVersion || 1;
+      journalEntry.aggregateVersion = event.aggregateVersion;
       journalEntry.eventIndex = index;
       journalEntry.occurredAt = occurredDate;
       journalEntry.actorId = (event as RichDomainEvent).actorId || null;
@@ -72,7 +71,7 @@ export class EventPersistenceHelper {
         outboxRow.sourceDomainEventId = event.eventId;
         outboxRow.aggregateType = event.aggregateType;
         outboxRow.aggregateId = event.aggregateId;
-        outboxRow.aggregateVersion = (event as RichDomainEvent).aggregateVersion || 1;
+        outboxRow.aggregateVersion = event.aggregateVersion;
         outboxRow.occurredAt = occurredDate;
         outboxRow.payloadJson = JSON.stringify({
           tenancyId: event.aggregateId,

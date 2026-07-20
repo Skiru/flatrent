@@ -30,6 +30,7 @@ export class UserRegisteredDomainEvent implements DomainEvent {
     public readonly payload: UserRegisteredPayload,
     occurredAt: string,
     eventId: string,
+    public readonly aggregateVersion: number,
   ) {
     this.eventId = eventId;
     this.occurredAt = occurredAt;
@@ -72,6 +73,7 @@ export class UserAccount extends AggregateRoot<string> {
         { email: email.value, role },
         occurredAt,
         eventId,
+        0,
       ),
     );
     return user;
@@ -99,6 +101,7 @@ export class UserAccount extends AggregateRoot<string> {
 
   public changePassword(newHash: string, occurredAt: string, eventId: string): void {
     this.passwordHash = newHash;
+    this.incrementVersion();
     this.recordDomainEvent(
       new PasswordChangedDomainEvent(
         this.id,
@@ -106,6 +109,7 @@ export class UserAccount extends AggregateRoot<string> {
         { userId: this.id },
         occurredAt,
         eventId,
+        this.getVersion(),
       ),
     );
   }
@@ -115,6 +119,7 @@ export class UserAccount extends AggregateRoot<string> {
       return;
     }
     this.status = UserStatus.BLOCKED;
+    this.incrementVersion();
   }
 }
 export class UserAccountBlockedError extends Error {

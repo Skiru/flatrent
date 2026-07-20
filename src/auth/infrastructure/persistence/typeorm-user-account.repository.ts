@@ -45,12 +45,11 @@ export class TypeOrmUserAccountRepository implements UserAccountRepository {
     const currentVersion = user.getVersion();
     const existing = await repo.findOne({ where: { id: user.id } });
     if (existing) {
-      if (existing.version !== currentVersion) {
+      if (existing.version !== currentVersion - 1) {
         throw new Error('Optimistic Lock Conflict: version mismatch.');
       }
-      entity.version = currentVersion + 1;
+      entity.version = currentVersion;
       await repo.save(entity);
-      user.incrementVersion(); // align version on domain object (only on update!)
     } else {
       entity.version = 0;
       await repo.save(entity);

@@ -50,6 +50,7 @@ export class LocalEventDispatcher {
           occurredAt: journalEvent.occurredAt.toISOString(),
           aggregateId: journalEvent.aggregateId,
           aggregateType: journalEvent.aggregateType,
+          aggregateVersion: journalEvent.aggregateVersion,
           payload: JSON.parse(journalEvent.payloadJson),
         };
 

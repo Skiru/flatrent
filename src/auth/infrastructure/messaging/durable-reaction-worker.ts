@@ -59,6 +59,7 @@ export class DurableReactionWorker {
         occurredAt: journalEvent.occurredAt.toISOString(),
         aggregateId: journalEvent.aggregateId,
         aggregateType: journalEvent.aggregateType,
+        aggregateVersion: journalEvent.aggregateVersion,
         payload: JSON.parse(journalEvent.payloadJson),
       };
 

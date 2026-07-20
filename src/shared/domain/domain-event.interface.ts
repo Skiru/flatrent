@@ -5,5 +5,6 @@ export interface DomainEvent {
   readonly occurredAt: string;
   readonly aggregateId: string;
   readonly aggregateType: string;
+  readonly aggregateVersion: number;
   readonly payload: unknown;
 }

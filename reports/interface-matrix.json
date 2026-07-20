@@ -1,0 +1,54 @@
+{
+  "project": "flatren",
+  "checkpoint": "C8_COMPLETE",
+  "adapters": [
+    {
+      "module": "Auth",
+      "interface_type": "HTTP",
+      "adapter_class": "AuthController",
+      "delegation_mechanism": "CommandBus / QueryBus",
+      "has_business_logic": false,
+      "verified_by_e2e_test": "test/e2e/http/auth-http.spec.ts"
+    },
+    {
+      "module": "Auth",
+      "interface_type": "CLI",
+      "adapter_class": "AuthCliCommand",
+      "delegation_mechanism": "CommandBus / QueryBus",
+      "has_business_logic": false,
+      "verified_by_e2e_test": "test/e2e/cli/auth-cli.spec.ts"
+    },
+    {
+      "module": "Auth",
+      "interface_type": "Module_API",
+      "adapter_class": "AuthModuleApiFacade",
+      "delegation_mechanism": "CommandBus / QueryBus",
+      "has_business_logic": false,
+      "verified_by_e2e_test": "test/e2e/module-api/auth-module-api.spec.ts"
+    },
+    {
+      "module": "Tenancy",
+      "interface_type": "HTTP",
+      "adapter_class": "TenancyController",
+      "delegation_mechanism": "CommandBus / QueryBus",
+      "has_business_logic": false,
+      "verified_by_e2e_test": "test/e2e/http/tenancy-http.spec.ts"
+    },
+    {
+      "module": "Tenancy",
+      "interface_type": "Messaging_SQS",
+      "adapter_class": "MaintenanceEventsConsumer",
+      "delegation_mechanism": "CommandBus / QueryBus",
+      "has_business_logic": false,
+      "verified_by_e2e_test": "test/e2e/messaging/maintenance-tenancy-reverse-flow.spec.ts"
+    },
+    {
+      "module": "Maintenance",
+      "interface_type": "Messaging_SQS",
+      "adapter_class": "TenancyEventsConsumer",
+      "delegation_mechanism": "CommandBus / QueryBus",
+      "has_business_logic": false,
+      "verified_by_e2e_test": "test/e2e/messaging/tenancy-maintenance-flow.spec.ts"
+    }
+  ]
+}

@@ -72,7 +72,7 @@ describe('Tenancy Context Domain Logic', () => {
     tenancy.activate(handover, '2026-07-19T00:00:00Z', 'event-999');
 
     expect(tenancy.getStatus()).toBe(TenancyStatus.ACTIVE);
-    expect(tenancy.getVersion()).toBe(0); // Version managed by persistence layer
+    expect(tenancy.getVersion()).toBe(1); // Version managed by domain layer
 
     const events = tenancy.peekPendingDomainEvents();
     expect(events.length).toBe(1);

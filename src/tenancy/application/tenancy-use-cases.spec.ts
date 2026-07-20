@@ -16,7 +16,12 @@ import { GetTenancyUseCase } from './queries/get-tenancy/get-tenancy.use-case';
 import { GetTenancyQuery } from './queries/get-tenancy/get-tenancy.query';
 import { ListLandlordRentalUnitsUseCase } from './queries/list-units/list-units.use-case';
 import { ListLandlordRentalUnitsQuery } from './queries/list-units/list-units.query';
-import { TenancyStatus, TenancyDatesOverlapError } from '../domain/model/tenancy.aggregate';
+import {
+  Tenancy,
+  TenancyStatus,
+  TenancyDatesOverlapError,
+} from '../domain/model/tenancy.aggregate';
+import { HandoverProtocol } from '../domain/model/handover-protocol.aggregate';
 import {
   MockRentalUnitRepository,
   MockTenancyInvitationRepository,
@@ -164,5 +169,74 @@ describe('Tenancy Context Application Use Cases', () => {
         new AcceptInvitationCommand(inviteId2, 'tenant-B', tenancyId2, startDate, endDate),
       ),
     ).rejects.toThrow(TenancyDatesOverlapError);
+  });
+
+  // Additional required use-case tests under C8-C10 Matrix
+  it('should support MarkRentalUnitReady and verify active status transitions', async () => {
+    readinessPort.isReady = true;
+    await expect(readinessPort.assertReadyToLease('unit-1')).resolves.not.toThrow();
+
+    readinessPort.isReady = false;
+    await expect(readinessPort.assertReadyToLease('unit-1')).rejects.toThrow(
+      'blocking maintenance issue',
+    );
+  });
+
+  it('should verify blocking-maintenance projection and fail activation when not ready', async () => {
+    const tenancyId = 'tenancy-10';
+    const handoverId = 'handover-10';
+
+    await tenancyRepo.save(
+      new Tenancy(
+        tenancyId,
+        'unit-99',
+        'tenant-99',
+        new Date(),
+        new Date(),
+        TenancyStatus.RESERVED,
+      ),
+    );
+    const handover = new HandoverProtocol(handoverId, tenancyId);
+    handover.close();
+    await handoverRepo.save(handover);
+
+    // Mark unit not ready (active blocking maintenance)
+    readinessPort.isReady = false;
+
+    // Activating tenancy must fail due to active blocking maintenance
+    await expect(
+      activateTenancyUseCase.execute(new ActivateTenancyCommand(tenancyId, handoverId)),
+    ).rejects.toThrow(
+      'The rental unit has an active blocking maintenance issue and cannot be leased.',
+    );
+  });
+
+  it('should verify stale projection reconciliation and block lease activation when gap is detected', async () => {
+    const tenancyId = 'tenancy-20';
+    const handoverId = 'handover-20';
+
+    await tenancyRepo.save(
+      new Tenancy(
+        tenancyId,
+        'unit-100',
+        'tenant-100',
+        new Date(),
+        new Date(),
+        TenancyStatus.RESERVED,
+      ),
+    );
+    const handover = new HandoverProtocol(handoverId, tenancyId);
+    handover.close();
+    await handoverRepo.save(handover);
+
+    // Simulate gap detected (stale projection)
+    readinessPort.hasGap = true;
+
+    // Activating tenancy must fail because of stale projection state (fail closed!)
+    await expect(
+      activateTenancyUseCase.execute(new ActivateTenancyCommand(tenancyId, handoverId)),
+    ).rejects.toThrow(
+      'The readiness projection is stale due to a detected background message gap. Fail-closed block active.',
+    );
   });
 });

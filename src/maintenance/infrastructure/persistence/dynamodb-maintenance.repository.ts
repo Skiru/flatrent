@@ -78,7 +78,7 @@ export class DynamoDBMaintenanceRepository implements MaintenanceRequestReposito
       status: { S: request.getStatus() },
       isEmergency: { BOOL: request.getIsEmergency() },
       isClosed: { BOOL: request.getIsClosed() },
-      version: { N: String(currentVersion + 1) },
+      version: { N: String(currentVersion) },
     };
 
     if (request.getAssignedHandymanId()) {
@@ -116,7 +116,7 @@ export class DynamoDBMaintenanceRepository implements MaintenanceRequestReposito
         sourceDomainEventId: { S: messageId },
         aggregateType: { S: 'MaintenanceRequest' },
         aggregateId: { S: request.id },
-        aggregateVersion: { N: String(currentVersion + 1) },
+        aggregateVersion: { N: String(currentVersion) },
         occurredAt: { S: new Date().toISOString() },
         status: { S: 'PENDING' },
         attemptCount: { N: '0' },
@@ -125,7 +125,7 @@ export class DynamoDBMaintenanceRepository implements MaintenanceRequestReposito
             requestId: request.id,
             rentalUnitId: request.getRentalUnitId(),
             isBlocking,
-            version: currentVersion + 1, // version is 1 for initial opened event
+            version: currentVersion, // version is 0 for initial opened event
           }),
         },
       };
@@ -141,7 +141,7 @@ export class DynamoDBMaintenanceRepository implements MaintenanceRequestReposito
         sourceDomainEventId: { S: messageId },
         aggregateType: { S: 'MaintenanceRequest' },
         aggregateId: { S: request.id },
-        aggregateVersion: { N: String(currentVersion + 1) },
+        aggregateVersion: { N: String(currentVersion) },
         occurredAt: { S: new Date().toISOString() },
         status: { S: 'PENDING' },
         attemptCount: { N: '0' },
@@ -150,7 +150,7 @@ export class DynamoDBMaintenanceRepository implements MaintenanceRequestReposito
             requestId: request.id,
             rentalUnitId: request.getRentalUnitId(),
             isBlocking: false,
-            version: currentVersion + 1, // version increments sequence
+            version: currentVersion, // version increments sequence
           }),
         },
       };
@@ -174,7 +174,7 @@ export class DynamoDBMaintenanceRepository implements MaintenanceRequestReposito
           Item: item,
           ConditionExpression: 'version = :expectedVersion',
           ExpressionAttributeValues: {
-            ':expectedVersion': { N: String(currentVersion) },
+            ':expectedVersion': { N: String(currentVersion - 1) },
           },
         },
       });
@@ -196,7 +196,6 @@ export class DynamoDBMaintenanceRepository implements MaintenanceRequestReposito
           TransactItems: transactItems,
         }),
       );
-      request.incrementVersion();
     } catch (err: unknown) {
       if (
         err instanceof Error &&

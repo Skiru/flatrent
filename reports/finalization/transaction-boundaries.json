@@ -1,0 +1,66 @@
+{
+  "transaction_boundaries": {
+    "sql_modules": {
+      "modules": [
+        "auth",
+        "tenancy"
+      ],
+      "mechanism": "TypeORM DataSource transaction runner inside custom Unit of Work implementations.",
+      "atomicity_scope": [
+        "Aggregate state updates (inserts/updates/deletes on domain tables)",
+        "Domain Event Journal records (DomainEventJournalEntity)",
+        "Local Event Dispatch state (LocalEventDispatchEntity)",
+        "Reaction delivery status tracker (DomainReactionDeliveryEntity)",
+        "Transactional Integration Outbox rows (IntegrationOutboxEntity)"
+      ],
+      "safety_guarantees": {
+        "rollback_on_failure": "Any exception thrown within the transaction boundary causes TypeORM to execute a physical ROLLBACK. No partial writes are visible.",
+        "pre_commit_isolation": "No EventBus dispatch or SQS publishing is allowed before the transaction commits.",
+        "tests": [
+          "test/faults/faults.spec.ts (Fault 1: state rollback)",
+          "test/faults/faults.spec.ts (Fault 2: journal rollback)",
+          "test/faults/faults.spec.ts (Fault 3: dispatch rollback)",
+          "test/faults/faults.spec.ts (Fault 4: outbox rollback)",
+          "test/faults/faults.spec.ts (Fault 5: comprehensive crash rollback)"
+        ]
+      }
+    },
+    "nosql_modules": {
+      "modules": [
+        "maintenance"
+      ],
+      "mechanism": "AWS SDK v3 TransactWriteItemsCommand (DynamoDB physical transaction).",
+      "atomicity_scope": [
+        "MaintenanceRequest state update (REQUEST# keys)",
+        "Inbox deduplication marker (INBOX# keys) on consumer side",
+        "Integration Outbox event record (OUTBOX# keys) on producer side",
+        "Access Projection snapshot updates (ACCESS# keys)"
+      ],
+      "safety_guarantees": {
+        "rollback_on_failure": "If any condition expression (e.g. optimistic concurrency check or unique inbox key check) fails, DynamoDB cancels the entire transaction with TransactionCanceledException.",
+        "tests": [
+          "test/faults/faults.spec.ts (Fault 18: inbox write rollback on conflict)",
+          "test/faults/faults.spec.ts (Fault 19: OCC version mismatch rollback)"
+        ]
+      }
+    },
+    "outbox_inbox_relays": {
+      "outbox_relay": {
+        "mechanism": "Lease-based scheduler with batch querying, exponential backoff, availableAt timestamps, and try limits.",
+        "atomicity": "Atomic write of status SUCCEEDED/FAILED inside DB, separated from actual async SNS publish (publish outside DB transaction).",
+        "tests": [
+          "test/faults/faults.spec.ts (Fault 10: outbox RETRY transition on SNS error)",
+          "test/faults/faults.spec.ts (Fault 11: at-least-once retry on crash prior to status commit)"
+        ]
+      },
+      "inbox_relay": {
+        "mechanism": "SQS Consumer with envelope Zod validation, unique DB inbox marker, and deferred SQS delete.",
+        "atomicity": "Inbox marker and business effect are saved in a single database transaction. SQS DeleteMessage is invoked ONLY after transaction commit.",
+        "tests": [
+          "test/faults/faults.spec.ts (Fault 14: SQS redelivery on transaction failure)",
+          "test/faults/faults.spec.ts (Fault 15: post-commit consumer crash idempotency skip)"
+        ]
+      }
+    }
+  }
+}

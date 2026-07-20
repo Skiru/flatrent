@@ -1,0 +1,61 @@
+{
+  "ownership": {
+    "auth": {
+      "database": "flatren_auth",
+      "port": 15432,
+      "technology": "PostgreSQL RDS",
+      "orm": "TypeORM (Data Mapper pattern)",
+      "migrations": "src/auth/infrastructure/persistence/migrations/",
+      "entities": [
+        "UserAccountEntity",
+        "RefreshSessionEntity",
+        "DomainEventJournalEntity",
+        "LocalEventDispatchEntity",
+        "DomainReactionDeliveryEntity",
+        "IntegrationOutboxEntity"
+      ],
+      "access": "Strictly limited to auth service. No cross-module queries or foreign keys."
+    },
+    "tenancy": {
+      "database": "flatren_tenancy",
+      "port": 15433,
+      "technology": "PostgreSQL RDS",
+      "orm": "TypeORM (Data Mapper pattern)",
+      "migrations": "src/tenancy/infrastructure/persistence/migrations/",
+      "entities": [
+        "RentalUnitEntity",
+        "TenancyInvitationEntity",
+        "TenancyEntity",
+        "HandoverProtocolEntity",
+        "RentalUnitReadinessProjectionEntity",
+        "DomainEventJournalEntity",
+        "LocalEventDispatchEntity",
+        "DomainReactionDeliveryEntity",
+        "IntegrationOutboxEntity",
+        "InboxEntity"
+      ],
+      "access": "Strictly limited to tenancy service. No cross-module queries or foreign keys."
+    },
+    "maintenance": {
+      "tableName": "flatren-maintenance-requests",
+      "technology": "DynamoDB",
+      "orm": "None (Native AWS SDK v3 DynamoDBClient mapping)",
+      "indexes": [
+        "RentalUnitIndex"
+      ],
+      "items": [
+        "MaintenanceRequest (PK=REQUEST#<id>, SK=REQUEST#<id>)",
+        "InboxIdempotency (PK=INBOX#<messageId>, SK=INBOX#<messageId>)",
+        "OutboxIntegration (PK=OUTBOX#<messageId>, SK=OUTBOX#<messageId>)",
+        "AccessProjection (PK=ACCESS#<userId>, SK=UNIT#<rentalUnitId>)"
+      ],
+      "access": "Strictly owned by maintenance service context. No TypeORM or SQL dependencies."
+    },
+    "cache": {
+      "technology": "Redis",
+      "port": 16379,
+      "usage": "Cache-only semantics (never the source of truth, never the durable outbox/inbox, never the only authorization source).",
+      "resiliency": "Fail-safe graceful fallback to databases when Redis is unavailable (covered by Fault 20 test)."
+    }
+  }
+}

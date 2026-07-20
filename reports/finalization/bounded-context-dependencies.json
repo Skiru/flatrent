@@ -1,0 +1,24 @@
+{
+  "dependencies": [
+    {
+      "from": "tenancy",
+      "to": "maintenance",
+      "type": "asynchronous",
+      "edge": "Tenancy -> SNS Topic -> SQS Queue (flatren-maintenance-tenancy-events) -> TenancyEventsConsumer",
+      "description": "Tenancy events like TenancyActivated and TenancyEnded are routed via SNS/SQS and consumed by Maintenance to project access snapshots inside DynamoDB."
+    },
+    {
+      "from": "maintenance",
+      "to": "tenancy",
+      "type": "asynchronous",
+      "edge": "Maintenance -> DynamoDB Outbox -> SQS Queue (flatren-tenancy-maintenance-events) -> MaintenanceEventsConsumer",
+      "description": "Maintenance events like BlockingMaintenanceRequestOpened and BlockingMaintenanceRequestResolved are routed via SNS/SQS and consumed by Tenancy to update unit readiness projections."
+    }
+  ],
+  "conformance": {
+    "noDirectDatabaseCrossAccess": true,
+    "noCrossModuleTypeOrmRelations": true,
+    "noDirectSynchronousCalls": true,
+    "allCommunicationThroughEventsOrContracts": true
+  }
+}

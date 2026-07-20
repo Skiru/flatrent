@@ -1,45 +1,38 @@
 {
   "$schema": "https://knip.dev/schema.json",
-  "entry": ["src/main.ts", "src/cli-entry.ts", "src/**/composition/*.ts", "scripts/**/*.ts", "src/**/*.spec.ts", "test/**/*.ts"],
+  "entry": [
+    "src/main.ts",
+    "src/cli-entry.ts",
+    "src/**/composition/*.ts",
+    "scripts/**/*.ts",
+    "src/**/*.spec.ts",
+    "test/**/*.ts"
+  ],
+  "project": ["src/**/*.ts"],
   "rules": {
-    "files": "off",
-    "exports": "off",
+    "files": "error",
+    "exports": "warn",
     "types": "off",
     "nsExports": "off",
     "classMembers": "off",
-    "dependencies": "off",
-    "devDependencies": "off"
+    "dependencies": "error",
+    "devDependencies": "error"
   },
-  "project": ["src/**/*.ts"],
+  "ignore": [
+    "src/auth/infrastructure/messaging/audit-security-alert.reaction.ts",
+    "src/auth/infrastructure/messaging/durable-reaction-worker.ts",
+    "src/shared/application/ports/reaction-executor.interface.ts"
+  ],
+  "ignoreExports": [
+    "src/**/*.ts"
+  ],
   "ignoreDependencies": [
-    "@aws-sdk/client-dynamodb",
-    "@aws-sdk/client-sns",
-    "@aws-sdk/client-sqs",
-    "@aws-sdk/lib-dynamodb",
-    "@nestjs/cqrs",
-    "@nestjs/passport",
-    "@nestjs/typeorm",
-    "argon2",
-    "helmet",
-    "ioredis",
-    "passport",
-    "passport-jwt",
-    "pg",
-    "typeorm",
-    "zod",
-    "@aws-sdk/client-elasticache",
-    "@aws-sdk/client-rds",
     "@nestjs/schematics",
-    "@nestjs/testing",
     "@stryker-mutator/jest-runner",
     "@stryker-mutator/typescript-checker",
-    "@types/express",
     "@types/jest",
-    "@types/passport",
-    "@types/passport-jwt",
-    "@types/pg",
-    "@types/supertest",
-    "supertest",
+    "@aws-sdk/lib-dynamodb",
+    "helmet",
     "tsconfig-paths"
   ]
 }

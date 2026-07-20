@@ -19,6 +19,7 @@ export class TenancyActivatedDomainEvent implements DomainEvent {
     public readonly payload: TenancyActivatedPayload,
     occurredAt: string,
     eventId: string,
+    public readonly aggregateVersion: number,
   ) {
     this.eventId = eventId;
     this.occurredAt = occurredAt;
