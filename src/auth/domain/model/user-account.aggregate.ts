@@ -18,7 +18,7 @@ export interface UserRegisteredPayload {
   readonly role: UserRole;
 }
 
-/** @public */
+/** @internal */
 export class UserRegisteredDomainEvent implements DomainEvent {
   public readonly eventId: string;
   public readonly eventType = 'UserRegisteredDomainEvent';

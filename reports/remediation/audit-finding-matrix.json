@@ -1,202 +1,394 @@
 [
   {
     "id": "P0-01",
+    "checkpointOwner": "C2",
     "status": "OPEN",
-    "evidence": [],
-    "rootCause": "",
-    "filesChanged": [],
-    "regressionTests": [],
-    "commands": [],
-    "blocksReady": true
+    "currentEvidence": "Unit of Work not yet implemented in SQL contexts (Auth and Tenancy). Use cases are currently not wrapped in cohesive SQL transactions.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
   },
   {
     "id": "P0-02",
+    "checkpointOwner": "C2",
     "status": "OPEN",
-    "evidence": [],
-    "rootCause": "",
-    "filesChanged": [],
-    "regressionTests": [],
-    "commands": [],
-    "blocksReady": true
+    "currentEvidence": "Repositories currently clear/acknowledge domain events before SQL transactions are committed.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
   },
   {
     "id": "P0-03",
+    "checkpointOwner": "C5",
     "status": "OPEN",
-    "evidence": [],
-    "rootCause": "",
-    "filesChanged": [],
-    "regressionTests": [],
-    "commands": [],
-    "blocksReady": true
+    "currentEvidence": "MaintenanceModule is currently empty/not wired in production composition. True integration and wiring of Maintenance is pending C5.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
   },
   {
     "id": "P0-04",
+    "checkpointOwner": "C7",
     "status": "OPEN",
-    "evidence": [],
-    "rootCause": "",
-    "filesChanged": [],
-    "regressionTests": [],
-    "commands": [],
-    "blocksReady": true
+    "currentEvidence": "Workers for event dispatch, reaction, outbox, and inbox are not wired or running.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
   },
   {
     "id": "P0-05",
+    "checkpointOwner": "C4",
     "status": "OPEN",
-    "evidence": [],
-    "rootCause": "",
-    "filesChanged": [],
-    "regressionTests": [],
-    "commands": [],
-    "blocksReady": true
+    "currentEvidence": "Tenancy HTTP endpoints do not have authorization checks and accept actor IDs directly from clients.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
   },
   {
     "id": "P0-06",
+    "checkpointOwner": "C3",
     "status": "OPEN",
-    "evidence": [],
-    "rootCause": "",
-    "filesChanged": [],
-    "regressionTests": [],
-    "commands": [],
-    "blocksReady": true
+    "currentEvidence": "Login and refresh endpoints do not issue real access JWTs.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
   },
   {
     "id": "P0-07",
+    "checkpointOwner": "C3",
     "status": "OPEN",
-    "evidence": [],
-    "rootCause": "",
-    "filesChanged": [],
-    "regressionTests": [],
-    "commands": [],
-    "blocksReady": true
+    "currentEvidence": "JWT keys are generated dynamically at startup, causing sessions to invalidate on process restart.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
   },
   {
     "id": "P0-08",
+    "checkpointOwner": "C3",
     "status": "OPEN",
-    "evidence": [],
-    "rootCause": "",
-    "filesChanged": [],
-    "regressionTests": [],
-    "commands": [],
-    "blocksReady": true
+    "currentEvidence": "Refresh-token family rotation and reuse detection are not fully implemented.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
   },
   {
     "id": "P0-09",
+    "checkpointOwner": "C4",
     "status": "OPEN",
-    "evidence": [],
-    "rootCause": "",
-    "filesChanged": [],
-    "regressionTests": [],
-    "commands": [],
-    "blocksReady": true
+    "currentEvidence": "AcceptInvitation use case lacks transactional isolation and can leave partial state on failure.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
   },
   {
     "id": "P0-10",
+    "checkpointOwner": "C2",
     "status": "OPEN",
-    "evidence": [],
-    "rootCause": "",
-    "filesChanged": [],
-    "regressionTests": [],
-    "commands": [],
-    "blocksReady": true
+    "currentEvidence": "PostgreSQL optimistic concurrency is not atomically enforced on aggregates.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
   },
   {
     "id": "P0-11",
+    "checkpointOwner": "C5",
     "status": "OPEN",
-    "evidence": [],
-    "rootCause": "",
-    "filesChanged": [],
-    "regressionTests": [],
-    "commands": [],
-    "blocksReady": true
+    "currentEvidence": "Maintenance domain events are not recorded; repository directly fabricates integration events.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
   },
   {
     "id": "P0-12",
+    "checkpointOwner": "C7",
     "status": "OPEN",
-    "evidence": [],
-    "rootCause": "",
-    "filesChanged": [],
-    "regressionTests": [],
-    "commands": [],
-    "blocksReady": true
+    "currentEvidence": "DynamoDB outbox relay does not have a lease, recovery mechanism, or concurrency protection.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
   },
   {
     "id": "P0-13",
+    "checkpointOwner": "C7",
     "status": "OPEN",
-    "evidence": [],
-    "rootCause": "",
-    "filesChanged": [],
-    "regressionTests": [],
-    "commands": [],
-    "blocksReady": true
+    "currentEvidence": "SQL outbox relay has no safe lease or recovery mechanisms.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
   },
   {
     "id": "P0-14",
+    "checkpointOwner": "C6",
     "status": "OPEN",
-    "evidence": [],
-    "rootCause": "",
-    "filesChanged": [],
-    "regressionTests": [],
-    "commands": [],
-    "blocksReady": true
+    "currentEvidence": "Maintenance-to-Tenancy blocking projection uses a single boolean and an invalid global version.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
   },
   {
     "id": "P0-15",
+    "checkpointOwner": "C6",
     "status": "OPEN",
-    "evidence": [],
-    "rootCause": "",
-    "filesChanged": [],
-    "regressionTests": [],
-    "commands": [],
-    "blocksReady": true
+    "currentEvidence": "TenancyEnded.v1 integration contract is missing, and Maintenance access is not revoked upon tenancy termination.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
   },
   {
     "id": "P0-16",
+    "checkpointOwner": "C6",
     "status": "OPEN",
-    "evidence": [],
-    "rootCause": "",
-    "filesChanged": [],
-    "regressionTests": [],
-    "commands": [],
-    "blocksReady": true
+    "currentEvidence": "SQS consumer contains business/projection logic and bypasses the CommandBus.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
   },
   {
     "id": "P0-17",
+    "checkpointOwner": "C6",
     "status": "OPEN",
-    "evidence": [],
-    "rootCause": "",
-    "filesChanged": [],
-    "regressionTests": [],
-    "commands": [],
-    "blocksReady": true
+    "currentEvidence": "Inbox poison-message detection and duplicate protection are not implemented.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
   },
   {
     "id": "P0-18",
+    "checkpointOwner": "C10",
     "status": "OPEN",
-    "evidence": [],
-    "rootCause": "",
-    "filesChanged": [],
-    "regressionTests": [],
-    "commands": [],
-    "blocksReady": true
+    "currentEvidence": "Finalization reports are manually written and do not align with current source code state.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
   },
   {
     "id": "P0-19",
-    "status": "OPEN",
-    "evidence": [],
-    "rootCause": "",
-    "filesChanged": [],
-    "regressionTests": [],
-    "commands": [],
-    "blocksReady": true
+    "checkpointOwner": "C1",
+    "status": "PARTIALLY_FIXED",
+    "currentEvidence": "Onion and dependency gates are enforced locally, but full CI pipelines with SBOM, mutation, security scans, and container smoke are not fully completed.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
   },
   {
     "id": "P0-20",
+    "checkpointOwner": "C9",
     "status": "OPEN",
-    "evidence": [],
-    "rootCause": "",
-    "filesChanged": [],
-    "regressionTests": [],
-    "commands": [],
-    "blocksReady": true
+    "currentEvidence": "Fault injection suite and mock failure test scenarios are not implemented.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
+  },
+  {
+    "id": "P1-01",
+    "checkpointOwner": "C1",
+    "status": "CONFIRMED_FIXED",
+    "currentEvidence": "Removed @Global() from SharedModule in C1 to prevent modular leakage.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": false
+  },
+  {
+    "id": "P1-02",
+    "checkpointOwner": "C1",
+    "status": "CONFIRMED_FIXED",
+    "currentEvidence": "Hardened architecture and boundary validations in architecture.spec.ts in C1.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": false
+  },
+  {
+    "id": "P1-03",
+    "checkpointOwner": "C1",
+    "status": "CONFIRMED_FIXED",
+    "currentEvidence": "Updated dependency-cruiser and knip configurations in C1.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": false
+  },
+  {
+    "id": "P1-04",
+    "checkpointOwner": "C1",
+    "status": "CONFIRMED_FIXED",
+    "currentEvidence": "Cleaned up public domain and repository/UoW exports from module scopes in C1.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": false
+  },
+  {
+    "id": "P1-05",
+    "checkpointOwner": "C4",
+    "status": "OPEN",
+    "currentEvidence": "Missing Tenancy Module API and Anti-Corruption Layer.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
+  },
+  {
+    "id": "P1-06",
+    "checkpointOwner": "C4",
+    "status": "OPEN",
+    "currentEvidence": "Anemic Tenancy and Maintenance domain models with direct properties and setters.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
+  },
+  {
+    "id": "P1-07",
+    "checkpointOwner": "C2",
+    "status": "OPEN",
+    "currentEvidence": "Broken local-event dispatch concurrency and lock management.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
+  },
+  {
+    "id": "P1-08",
+    "checkpointOwner": "C2",
+    "status": "OPEN",
+    "currentEvidence": "SQL transactions held during reaction executions.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
+  },
+  {
+    "id": "P1-09",
+    "checkpointOwner": "C3",
+    "status": "OPEN",
+    "currentEvidence": "Hardcoded database or service credentials present in defaults.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
+  },
+  {
+    "id": "P1-10",
+    "checkpointOwner": "C3",
+    "status": "OPEN",
+    "currentEvidence": "Lack of startup Zod configuration validation.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
+  },
+  {
+    "id": "P1-11",
+    "checkpointOwner": "C8",
+    "status": "OPEN",
+    "currentEvidence": "RFC 9457 exception filter not wired or configured in production.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
+  },
+  {
+    "id": "P1-12",
+    "checkpointOwner": "C8",
+    "status": "OPEN",
+    "currentEvidence": "Incomplete CLI commands and no Zod input validation.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
+  },
+  {
+    "id": "P1-13",
+    "checkpointOwner": "C8",
+    "status": "OPEN",
+    "currentEvidence": "Missing Redis cache-aside implementation.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
+  },
+  {
+    "id": "P1-14",
+    "checkpointOwner": "C8",
+    "status": "OPEN",
+    "currentEvidence": "Health endpoints do not verify deep database or Redis readiness.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
+  },
+  {
+    "id": "P1-15",
+    "checkpointOwner": "C6",
+    "status": "OPEN",
+    "currentEvidence": "Integration event envelope lacks correlation, causation, and schema info.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
+  },
+  {
+    "id": "P1-16",
+    "checkpointOwner": "C3",
+    "status": "OPEN",
+    "currentEvidence": "Public string DI tokens and internal verifier leakage.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
+  },
+  {
+    "id": "P1-17",
+    "checkpointOwner": "C2",
+    "status": "OPEN",
+    "currentEvidence": "Mutable aggregate versions that can be manipulated externally.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
+  },
+  {
+    "id": "P1-18",
+    "checkpointOwner": "C2",
+    "status": "OPEN",
+    "currentEvidence": "Inconsistent aggregate, journal, and event version semantics.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
+  },
+  {
+    "id": "P1-19",
+    "checkpointOwner": "C3",
+    "status": "OPEN",
+    "currentEvidence": "Authentication timing leakage vulnerabilities on login.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
+  },
+  {
+    "id": "P1-20",
+    "checkpointOwner": "C8",
+    "status": "OPEN",
+    "currentEvidence": "Module APIs lacking session validation and timeouts.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
+  },
+  {
+    "id": "P1-21",
+    "checkpointOwner": "C5",
+    "status": "OPEN",
+    "currentEvidence": "DynamoDB errors broadly translated to generic 'not found' or caught unconditionally.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
+  },
+  {
+    "id": "P1-22",
+    "checkpointOwner": "C5",
+    "status": "OPEN",
+    "currentEvidence": "Missing defensive Zod validation of DynamoDB records on rehydration.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
+  },
+  {
+    "id": "P1-23",
+    "checkpointOwner": "C5",
+    "status": "OPEN",
+    "currentEvidence": "Missing DynamoDB transaction-budget (size and count) limits check.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
+  },
+  {
+    "id": "P1-24",
+    "checkpointOwner": "C9",
+    "status": "OPEN",
+    "currentEvidence": "E2E tests manually constructing dependencies instead of using the modular composition root.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
+  },
+  {
+    "id": "P1-25",
+    "checkpointOwner": "C9",
+    "status": "OPEN",
+    "currentEvidence": "Missing real mutation test coverage gates (Stryker).",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
+  },
+  {
+    "id": "P1-26",
+    "checkpointOwner": "C9",
+    "status": "OPEN",
+    "currentEvidence": "Unsafe DB migrations utilizing CASCADE cascades.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
+  },
+  {
+    "id": "P1-27",
+    "checkpointOwner": "C1",
+    "status": "CONFIRMED_FIXED",
+    "currentEvidence": "Corrected and verified lint and formatter scopes to cover all files in C1.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": false
+  },
+  {
+    "id": "P1-28",
+    "checkpointOwner": "C1",
+    "status": "CONFIRMED_FIXED",
+    "currentEvidence": "Pinned all direct and dev dependencies cleanly in package.json and pnpm-lock.yaml in C1.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": false
+  },
+  {
+    "id": "P1-29",
+    "checkpointOwner": "C10",
+    "status": "OPEN",
+    "currentEvidence": "Process-local logs and metrics are not fully integrated or structured.",
+    "blocksCurrentCheckpoint": false,
+    "blocksFinalReady": true
   }
 ]

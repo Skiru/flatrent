@@ -34,5 +34,4 @@ export const tenancyDataSourceOptions: DataSourceOptions = {
   logging: false,
 };
 
-/** @public */
 export const tenancyDataSource = new DataSource(tenancyDataSourceOptions);

@@ -1,0 +1,123 @@
+[
+  {
+    "path": "src/auth/domain/events/password-changed.event.ts",
+    "symbol": "RefreshSessionCreatedDomainEvent",
+    "actualExternalConsumer": "None",
+    "whyExportIsRequired": "Intended domain event for refresh session creation, to be published upon session startup.",
+    "whyStaticImportIsNotVisible": "The RefreshSession aggregate and C3 Auth vertical slice are not yet fully implemented.",
+    "alternativeConsidered": "Remove export keyword or keep as unreferenced exception in knip.json.",
+    "keepOrRemove": "REMOVE",
+    "owner": "C3_AUTH_PRODUCTION_VERTICAL_SLICE",
+    "reviewCondition": "Import and publish inside RefreshSession aggregate and local-event-dispatcher in C3."
+  },
+  {
+    "path": "src/auth/domain/events/password-changed.event.ts",
+    "symbol": "RefreshSessionRotatedDomainEvent",
+    "actualExternalConsumer": "None",
+    "whyExportIsRequired": "Intended domain event for refresh session family rotation.",
+    "whyStaticImportIsNotVisible": "C3 Auth vertical slice is not yet implemented.",
+    "alternativeConsidered": "Remove export keyword or keep as unreferenced exception in knip.json.",
+    "keepOrRemove": "REMOVE",
+    "owner": "C3_AUTH_PRODUCTION_VERTICAL_SLICE",
+    "reviewCondition": "Import and publish inside RefreshSession aggregate and local-event-dispatcher in C3."
+  },
+  {
+    "path": "src/auth/domain/events/password-changed.event.ts",
+    "symbol": "RefreshSessionRevokedDomainEvent",
+    "actualExternalConsumer": "None",
+    "whyExportIsRequired": "Intended domain event for refresh session family revocation.",
+    "whyStaticImportIsNotVisible": "C3 Auth vertical slice is not yet implemented.",
+    "alternativeConsidered": "Remove export keyword or keep as unreferenced exception in knip.json.",
+    "keepOrRemove": "REMOVE",
+    "owner": "C3_AUTH_PRODUCTION_VERTICAL_SLICE",
+    "reviewCondition": "Import and publish inside RefreshSession aggregate and local-event-dispatcher in C3."
+  },
+  {
+    "path": "src/auth/domain/model/refresh-session.entity.ts",
+    "symbol": "RefreshSessionRevokedError",
+    "actualExternalConsumer": "src/auth/domain/refresh-session.spec.ts, src/auth/application/auth-use-cases.spec.ts",
+    "whyExportIsRequired": "Required to assert specific error types in unit and application-layer tests.",
+    "whyStaticImportIsNotVisible": "Statically imported in test files which are excluded from production build bundle checking.",
+    "alternativeConsidered": "Keep export for tests but document as exception in knip.json; or remove @public annotation since it is tested.",
+    "keepOrRemove": "REMOVE",
+    "owner": "C3_AUTH_PRODUCTION_VERTICAL_SLICE",
+    "reviewCondition": "Remove @public tag and rely on test file exclusions or explicit knip exceptions if needed."
+  },
+  {
+    "path": "src/auth/domain/model/refresh-session.entity.ts",
+    "symbol": "RefreshSessionTokenReuseDetectedError",
+    "actualExternalConsumer": "src/auth/domain/refresh-session.spec.ts, src/auth/application/auth-use-cases.spec.ts",
+    "whyExportIsRequired": "Required to assert specific error types in unit and application-layer tests.",
+    "whyStaticImportIsNotVisible": "Statically imported in test files which are excluded from production build bundle checking.",
+    "alternativeConsidered": "Keep export for tests but document as exception in knip.json; or remove @public annotation since it is tested.",
+    "keepOrRemove": "REMOVE",
+    "owner": "C3_AUTH_PRODUCTION_VERTICAL_SLICE",
+    "reviewCondition": "Remove @public tag and rely on test file exclusions or explicit knip exceptions if needed."
+  },
+  {
+    "path": "src/auth/domain/model/user-account.aggregate.ts",
+    "symbol": "UserRegisteredDomainEvent",
+    "actualExternalConsumer": "src/auth/infrastructure/persistence/event-persistence.helper.ts",
+    "whyExportIsRequired": "Statically imported and mapped to public integration event in persistence helper.",
+    "whyStaticImportIsNotVisible": "It is visible and statically imported in production helper code.",
+    "alternativeConsidered": "Remove @public tag since it is statically used in production code and thus Knip does not complain.",
+    "keepOrRemove": "REMOVE",
+    "owner": "C1_ARCHITECTURAL_FOUNDATION_FINAL",
+    "reviewCondition": "Remove @public tag immediately because the export is actively used in production code."
+  },
+  {
+    "path": "src/auth/infrastructure/persistence/auth-data-source.ts",
+    "symbol": "authDataSource",
+    "actualExternalConsumer": "TypeORM CLI migration runner",
+    "whyExportIsRequired": "Entry point for migrations and DB administrative tools.",
+    "whyStaticImportIsNotVisible": "TypeORM CLI queries are external tool invocations, not static imports in production codebase.",
+    "alternativeConsidered": "Configure the path as a precise Knip entry point instead of @public annotation.",
+    "keepOrRemove": "REMOVE",
+    "owner": "C1_ARCHITECTURAL_FOUNDATION_FINAL",
+    "reviewCondition": "Configure as Knip entry point in knip.json and remove the @public tag."
+  },
+  {
+    "path": "src/tenancy/infrastructure/persistence/tenancy-data-source.ts",
+    "symbol": "tenancyDataSource",
+    "actualExternalConsumer": "TypeORM CLI migration runner",
+    "whyExportIsRequired": "Entry point for migrations and DB administrative tools.",
+    "whyStaticImportIsNotVisible": "TypeORM CLI queries are external tool invocations, not static imports in production codebase.",
+    "alternativeConsidered": "Configure the path as a precise Knip entry point instead of @public annotation.",
+    "keepOrRemove": "REMOVE",
+    "owner": "C1_ARCHITECTURAL_FOUNDATION_FINAL",
+    "reviewCondition": "Configure as Knip entry point in knip.json and remove the @public tag."
+  },
+  {
+    "path": "src/maintenance/application/ports/maintenance-request.repository.ts",
+    "symbol": "MAINTENANCE_REQUEST_REPOSITORY_TOKEN",
+    "actualExternalConsumer": "None",
+    "whyExportIsRequired": "Dependency Injection token constant for MaintenanceRequestRepository.",
+    "whyStaticImportIsNotVisible": "Maintenance module internals are ignored or uncomposing in the baseline.",
+    "alternativeConsidered": "Remove @public tag since the entire src/maintenance/ directory is currently ignored in knip.json.",
+    "keepOrRemove": "REMOVE",
+    "owner": "C5_MAINTENANCE_PRODUCTION_VERTICAL_SLICE",
+    "reviewCondition": "Remove @public tag; wire in MaintenanceModule composition during C5."
+  },
+  {
+    "path": "src/maintenance/application/ports/tenancy-access.port.ts",
+    "symbol": "TENANCY_ACCESS_PORT_TOKEN",
+    "actualExternalConsumer": "None",
+    "whyExportIsRequired": "Dependency Injection token constant for TenancyAccessPort.",
+    "whyStaticImportIsNotVisible": "Maintenance module internals are ignored or uncomposing in the baseline.",
+    "alternativeConsidered": "Remove @public tag since the entire src/maintenance/ directory is currently ignored in knip.json.",
+    "keepOrRemove": "REMOVE",
+    "owner": "C5_MAINTENANCE_PRODUCTION_VERTICAL_SLICE",
+    "reviewCondition": "Remove @public tag; wire in MaintenanceModule composition during C5."
+  },
+  {
+    "path": "src/tenancy/application/commands/confirm-handover/confirm-handover.command.ts",
+    "symbol": "HandoverProtocolAlreadyClosedError",
+    "actualExternalConsumer": "None",
+    "whyExportIsRequired": "Custom error thrown when trying to confirm a handover that has already been closed.",
+    "whyStaticImportIsNotVisible": "C4 Tenancy vertical slice use cases are not yet implemented.",
+    "alternativeConsidered": "Remove @public tag and handle as an unreferenced exception or use inside the confirm handover command once implemented.",
+    "keepOrRemove": "REMOVE",
+    "owner": "C4_TENANCY_DOMAIN_AND_AUTHORIZATION",
+    "reviewCondition": "Remove @public tag, import and throw inside ConfirmHandoverCommandHandler in C4."
+  }
+]

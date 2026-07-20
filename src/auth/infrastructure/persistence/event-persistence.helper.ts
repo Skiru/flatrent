@@ -5,7 +5,10 @@ import { LocalEventDispatchEntity } from './local-event-dispatch.entity';
 import { DomainReactionDeliveryEntity } from './domain-reaction-delivery.entity';
 import { IntegrationOutboxEntity } from './integration-outbox.entity';
 import { AUTH_RELIABLE_REACTIONS_CATALOG } from './reliable-reactions-catalog';
-import { UserRegisteredPayload } from '../../domain/model/user-account.aggregate';
+import {
+  UserRegisteredPayload,
+  UserRegisteredDomainEvent,
+} from '../../domain/model/user-account.aggregate';
 
 interface RichDomainEvent extends DomainEvent {
   readonly actorId?: string;
@@ -82,7 +85,7 @@ export class EventPersistenceHelper {
 
       // 4. Persist Integration Outbox Messages
       // Map UserRegisteredDomainEvent to UserRegistered.v1 public integration event
-      if (event.eventType === 'UserRegisteredDomainEvent') {
+      if (event.eventType === UserRegisteredDomainEvent.name) {
         const outboxRow = new IntegrationOutboxEntity();
         outboxRow.messageId = event.eventId; // Determinisitic mapping
         outboxRow.eventType = 'UserRegistered.v1';
