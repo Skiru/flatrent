@@ -1,0 +1,14 @@
+{
+  "taskId": "FLATREN_PRODUCTION_GRADE_REMEDIATION_RECOVERY_V1",
+  "interruptionTimestamp": "2026-07-20T09:30:44+02:00",
+  "recoveredBranch": "fix/flatren-production-grade-remediation-v1",
+  "recoveredHead": "3f58df2eab5f9c8ae540c743c3f1765fedf48515",
+  "recoveredTree": "bb66624af2bec0c4a43cbc9e67b96d6dd18e0587",
+  "remoteMainSha": "3f58df2eab5f9c8ae540c743c3f1765fedf48515",
+  "worktreeStatus": "CLEAN",
+  "previousResponseCompleted": false,
+  "sourceEditsBeforeInterruption": [],
+  "safetyArtifactPath": "/var/folders/y6/c0sq10zj4vqdcpz_y3b802c80000gn/T/kilo/flatren-remediation-recovery-20260720-093044",
+  "recoveryDecision": "CONTINUE_TO_C0",
+  "nextCheckpoint": "C1_ARCHITECTURAL_FOUNDATION"
+}

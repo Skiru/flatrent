@@ -136,4 +136,3 @@ export class TenancyEventsConsumer {
     }
   }
 }
-export const TENANCY_EVENTS_CONSUMER_TOKEN = 'TenancyEventsConsumer';

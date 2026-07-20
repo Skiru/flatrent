@@ -25,4 +25,3 @@ export class RefreshSessionMapper {
     return domain;
   }
 }
-export const REFRESH_SESSION_MAPPER_TOKEN = 'RefreshSessionMapper';

@@ -36,4 +36,3 @@ export class DynamoDBTenancyAccessAdapter implements TenancyAccessPort {
     }
   }
 }
-export const DYNAMODB_TENANCY_ACCESS_ADAPTER_TOKEN = 'DynamoDBTenancyAccessAdapter';

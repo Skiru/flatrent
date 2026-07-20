@@ -89,4 +89,3 @@ export class LocalEventDispatcher {
 function eventKey(event: DomainEvent): string {
   return `${event.aggregateType}.${event.eventType}@${event.aggregateId}`;
 }
-export const LOCAL_EVENT_DISPATCHER_TOKEN = 'LocalEventDispatcher';

@@ -34,6 +34,7 @@ import { TypeOrmRentalUnitReadinessAdapter } from '../infrastructure/persistence
 import { ID_GENERATOR_TOKEN } from '../../shared/application/ports/id-generator.interface';
 import { UuidGenerator } from '../../shared/infrastructure/uuid-generator';
 import { SystemClock } from '../../shared/infrastructure/system-clock';
+import { SharedModule } from '../../shared/composition/shared.module';
 
 // Use Cases
 import { RegisterRentalUnitUseCase } from '../application/commands/register-rental-unit/register-rental-unit.use-case';
@@ -171,6 +172,7 @@ const CQRSHandlers = [
 @Module({
   imports: [
     CqrsModule,
+    SharedModule,
     TypeOrmModule.forFeature(
       [
         RentalUnitEntity,
@@ -188,13 +190,6 @@ const CQRSHandlers = [
   ],
   controllers: [TenancyController],
   providers: [...UseCaseProviders, ...RepositoryProviders, ...SharedProviders, ...CQRSHandlers],
-  exports: [
-    RENTAL_UNIT_REPOSITORY_TOKEN,
-    TENANCY_INVITATION_REPOSITORY_TOKEN,
-    HANDOVER_PROTOCOL_REPOSITORY_TOKEN,
-    TENANCY_REPOSITORY_TOKEN,
-    UNIT_OF_WORK_TOKEN,
-  ],
 })
 export class TenancyModule {}
 export const LOCAL_EVENT_DISPATCHER_TENANCY_TOKEN = 'LocalEventDispatcherTenancy';

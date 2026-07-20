@@ -1,30 +1,35 @@
 {
   "$schema": "https://knip.dev/schema.json",
   "entry": [
-    "src/main.ts",
-    "src/cli-entry.ts",
-    "src/**/composition/*.ts",
+    "src/main.ts!",
+    "src/cli-entry.ts!",
+    "src/**/composition/*.ts!",
     "scripts/**/*.ts",
     "src/**/*.spec.ts",
     "test/**/*.ts"
   ],
-  "project": ["src/**/*.ts"],
+  "project": ["src/**/*.ts!"],
   "rules": {
     "files": "error",
-    "exports": "warn",
+    "exports": "error",
     "types": "off",
     "nsExports": "off",
     "classMembers": "off",
+    "enumMembers": "off",
     "dependencies": "error",
     "devDependencies": "error"
   },
   "ignore": [
     "src/auth/infrastructure/messaging/audit-security-alert.reaction.ts",
     "src/auth/infrastructure/messaging/durable-reaction-worker.ts",
-    "src/shared/application/ports/reaction-executor.interface.ts"
-  ],
-  "ignoreExports": [
-    "src/**/*.ts"
+    "src/shared/application/ports/reaction-executor.interface.ts",
+    "src/auth/infrastructure/messaging/local-event-dispatcher.ts",
+    "src/maintenance/**/*.ts",
+    "src/shared/application/test-utils.ts",
+    "src/shared/interfaces/http/http-exception.filter.ts",
+    "src/tenancy/infrastructure/messaging/local-event-dispatcher.ts",
+    "src/tenancy/infrastructure/messaging/outbox-relay.service.ts",
+    "src/tenancy/interfaces/sqs/maintenance-events.consumer.ts"
   ],
   "ignoreDependencies": [
     "@nestjs/schematics",
@@ -33,6 +38,74 @@
     "@types/jest",
     "@aws-sdk/lib-dynamodb",
     "helmet",
-    "tsconfig-paths"
+    "tsconfig-paths",
+    "@aws-sdk/client-dynamodb",
+    "@aws-sdk/client-sns",
+    "@aws-sdk/client-sqs"
+  ],
+  "ignoreBinaries": [
+    "nest"
+  ],
+  "exceptions": [
+    {
+      "pathOrSymbol": "src/auth/infrastructure/messaging/local-event-dispatcher.ts",
+      "reason": "Preparatory WIP, not yet wired in NestJS composition root",
+      "owner": "C2 SQL UoW and durable local events",
+      "reviewCondition": "Wire up in AuthModule when C2 implementation is complete"
+    },
+    {
+      "pathOrSymbol": "src/maintenance/**/*.ts",
+      "reason": "Preparatory WIP, Maintenance context is not yet composed in AppModule",
+      "owner": "C5 Maintenance",
+      "reviewCondition": "Compose in MaintenanceModule and wire into AppModule during C5"
+    },
+    {
+      "pathOrSymbol": "src/shared/application/test-utils.ts",
+      "reason": "Test utilities meant for test files, not referenced in production code",
+      "owner": "C1 architecture foundation",
+      "reviewCondition": "Keep as exception while tests are run outside production bundle"
+    },
+    {
+      "pathOrSymbol": "src/shared/interfaces/http/http-exception.filter.ts",
+      "reason": "Global filter not yet registered globally in main.ts",
+      "owner": "C1 architecture foundation",
+      "reviewCondition": "Register in main.ts during API/HTTP polishing"
+    },
+    {
+      "pathOrSymbol": "src/tenancy/infrastructure/messaging/local-event-dispatcher.ts",
+      "reason": "Preparatory WIP, not yet wired in NestJS composition root",
+      "owner": "C2 SQL UoW and durable local events",
+      "reviewCondition": "Wire up in TenancyModule when C2 implementation is complete"
+    },
+    {
+      "pathOrSymbol": "src/tenancy/infrastructure/messaging/outbox-relay.service.ts",
+      "reason": "Preparatory WIP, not yet wired in NestJS composition root",
+      "owner": "C2 SQL UoW and durable local events",
+      "reviewCondition": "Wire up in TenancyModule when C2 implementation is complete"
+    },
+    {
+      "pathOrSymbol": "src/tenancy/interfaces/sqs/maintenance-events.consumer.ts",
+      "reason": "Consumer for peer module events, not yet wired up",
+      "owner": "C5 Maintenance",
+      "reviewCondition": "Compose and wire up during C5 integration"
+    },
+    {
+      "pathOrSymbol": "@aws-sdk/client-dynamodb",
+      "reason": "Used in DynamoDB persistence adapters which are not yet wired",
+      "owner": "C5 Maintenance",
+      "reviewCondition": "Remove from ignore list when DynamoDB adapter is wired in C5"
+    },
+    {
+      "pathOrSymbol": "@aws-sdk/client-sns",
+      "reason": "Used in SNS messaging adapters which are not yet wired",
+      "owner": "C5 Maintenance",
+      "reviewCondition": "Remove from ignore list when SNS adapter is wired in C5"
+    },
+    {
+      "pathOrSymbol": "@aws-sdk/client-sqs",
+      "reason": "Used in SQS event consumers which are not yet wired",
+      "owner": "C5 Maintenance",
+      "reviewCondition": "Remove from ignore list when SQS consumer is wired in C5"
+    }
   ]
 }

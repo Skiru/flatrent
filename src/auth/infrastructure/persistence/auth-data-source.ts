@@ -25,4 +25,5 @@ export const authDataSourceOptions: DataSourceOptions = {
   logging: false,
 };
 
+/** @public */
 export const authDataSource = new DataSource(authDataSourceOptions);

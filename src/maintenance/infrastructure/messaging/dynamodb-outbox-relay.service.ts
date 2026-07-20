@@ -108,4 +108,3 @@ export class DynamoDBOutboxRelayService {
     }
   }
 }
-export const DYNAMODB_OUTBOX_RELAY_SERVICE_TOKEN = 'DynamoDBOutboxRelayService';

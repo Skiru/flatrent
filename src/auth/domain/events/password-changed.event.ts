@@ -18,6 +18,7 @@ export class PasswordChangedDomainEvent implements DomainEvent {
     this.occurredAt = occurredAt;
   }
 }
+/** @public */
 export class RefreshSessionCreatedDomainEvent implements DomainEvent {
   public readonly eventId: string;
   public readonly eventType = 'RefreshSessionCreatedDomainEvent';
@@ -36,6 +37,7 @@ export class RefreshSessionCreatedDomainEvent implements DomainEvent {
     this.occurredAt = occurredAt;
   }
 }
+/** @public */
 export class RefreshSessionRotatedDomainEvent implements DomainEvent {
   public readonly eventId: string;
   public readonly eventType = 'RefreshSessionRotatedDomainEvent';
@@ -54,6 +56,7 @@ export class RefreshSessionRotatedDomainEvent implements DomainEvent {
     this.occurredAt = occurredAt;
   }
 }
+/** @public */
 export class RefreshSessionRevokedDomainEvent implements DomainEvent {
   public readonly eventId: string;
   public readonly eventType = 'RefreshSessionRevokedDomainEvent';

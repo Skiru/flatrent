@@ -14,4 +14,3 @@ export class RentalUnitReadinessProjectionEntity {
   @Column({ length: 50, default: 'ACTIVE' })
   status!: string; // 'ACTIVE', 'GAP_DETECTED'
 }
-export const RENTAL_UNIT_READINESS_PROJECTION_ENTITY_TOKEN = 'RentalUnitReadinessProjectionEntity';

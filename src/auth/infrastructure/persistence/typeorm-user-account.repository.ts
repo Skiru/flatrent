@@ -72,4 +72,3 @@ export class TypeOrmUserAccountRepository implements UserAccountRepository {
     }
   }
 }
-export const TYPEORM_USER_ACCOUNT_REPOSITORY_TOKEN = 'TypeOrmUserAccountRepository';

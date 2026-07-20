@@ -34,4 +34,3 @@ export class TypeOrmRentalUnitReadinessAdapter implements RentalUnitReadinessPor
     }
   }
 }
-export const TYPEORM_RENTAL_UNIT_READINESS_ADAPTER_TOKEN = 'TypeOrmRentalUnitReadinessAdapter';

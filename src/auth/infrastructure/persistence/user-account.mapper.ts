@@ -27,4 +27,3 @@ export class UserAccountMapper {
     return domain;
   }
 }
-export const USER_ACCOUNT_MAPPER_TOKEN = 'UserAccountMapper';

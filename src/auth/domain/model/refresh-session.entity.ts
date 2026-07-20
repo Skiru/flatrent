@@ -65,12 +65,14 @@ export class RefreshSession extends AggregateRoot<string> {
   }
 }
 
+/** @public */
 export class RefreshSessionRevokedError extends Error {
   constructor() {
     super('The refresh session has been revoked.');
   }
 }
 
+/** @public */
 export class RefreshSessionTokenReuseDetectedError extends Error {
   constructor() {
     super('Token reuse detected! Revoking the session family to prevent unauthorized access.');

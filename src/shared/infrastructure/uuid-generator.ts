@@ -6,4 +6,3 @@ export class UuidGenerator implements IdGenerator {
     return crypto.randomUUID();
   }
 }
-export const UUID_GENERATOR_TOKEN = 'UuidGenerator';

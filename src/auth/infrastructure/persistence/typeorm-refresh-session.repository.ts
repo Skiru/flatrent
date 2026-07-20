@@ -68,4 +68,3 @@ export class TypeOrmRefreshSessionRepository implements RefreshSessionRepository
     await repo.update({ userId }, { isRevoked: true });
   }
 }
-export const TYPEORM_REFRESH_SESSION_REPOSITORY_TOKEN = 'TypeOrmRefreshSessionRepository';

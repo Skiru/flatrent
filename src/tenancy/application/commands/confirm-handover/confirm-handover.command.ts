@@ -17,6 +17,7 @@ export class TenancyNotFoundError extends Error {
     super('The requested tenancy was not found.');
   }
 }
+/** @public */
 export class HandoverProtocolAlreadyClosedError extends Error {
   constructor() {
     super('The handover protocol is already closed.');

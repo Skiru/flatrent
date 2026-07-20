@@ -12,4 +12,3 @@ export class TypeOrmUnitOfWork implements UnitOfWork {
     });
   }
 }
-export const TYPEORM_UNIT_OF_WORK_TOKEN = 'TypeOrmUnitOfWork';

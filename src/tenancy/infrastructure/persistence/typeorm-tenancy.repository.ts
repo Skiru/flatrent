@@ -80,4 +80,3 @@ export class TypeOrmTenancyRepository implements TenancyRepository {
     }
   }
 }
-export const TYPEORM_TENANCY_REPOSITORY_TOKEN = 'TypeOrmTenancyRepository';
