@@ -1,3 +1,6 @@
+import '@aws-sdk/client-dynamodb';
+import '@aws-sdk/client-sns';
+import '@aws-sdk/client-sqs';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { JsonLogger } from './shared/infrastructure/logging/json-logger.service';

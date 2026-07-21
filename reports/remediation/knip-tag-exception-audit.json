@@ -1,0 +1,79 @@
+[
+  {
+    "path": "src/auth/domain/model/refresh-session.entity.ts",
+    "symbol": "RefreshSessionRevokedError",
+    "productionUsed": true,
+    "testUsed": true,
+    "whyExportRequired": "Imported in auth-use-cases.spec.ts and refresh-session.spec.ts to verify correct error throwing behavior during revocation scenarios.",
+    "whyPrivateSymbolIsInsufficient": "Cannot be imported and asserted on in external spec files if made private.",
+    "keepOrRemove": "KEEP",
+    "owner": "C3_AUTH_PRODUCTION_VERTICAL_SLICE",
+    "reviewCondition": "Retain as standard domain error; already explicitly excepted via knip.json ignoreIssues."
+  },
+  {
+    "path": "src/auth/domain/model/refresh-session.entity.ts",
+    "symbol": "RefreshSessionTokenReuseDetectedError",
+    "productionUsed": true,
+    "testUsed": true,
+    "whyExportRequired": "Imported in auth-use-cases.spec.ts and refresh-session.spec.ts to assert that token reuse throws this precise error and triggers revocation.",
+    "whyPrivateSymbolIsInsufficient": "Cannot be imported and asserted on in test suites if not exported.",
+    "keepOrRemove": "KEEP",
+    "owner": "C3_AUTH_PRODUCTION_VERTICAL_SLICE",
+    "reviewCondition": "Retain as standard domain error; already explicitly excepted via knip.json ignoreIssues."
+  },
+  {
+    "path": "src/auth/domain/model/user-account.aggregate.ts",
+    "symbol": "UserRegisteredDomainEvent",
+    "productionUsed": true,
+    "testUsed": true,
+    "whyExportRequired": "Statically imported in event-persistence.helper.ts to map local events to public integration events.",
+    "whyPrivateSymbolIsInsufficient": "Required in persistence layer mapping helper outside the aggregate file.",
+    "keepOrRemove": "KEEP",
+    "owner": "C1_ARCHITECTURAL_FOUNDATION_FINAL",
+    "reviewCondition": "Remove unjustified @internal tag completely because this class is actively used in production."
+  },
+  {
+    "path": "src/auth/domain/events/password-changed.event.ts",
+    "symbol": "RefreshSessionCreatedDomainEvent",
+    "productionUsed": false,
+    "testUsed": false,
+    "whyExportRequired": "None. This is preparatory domain event dead code with no real production or test consumers.",
+    "whyPrivateSymbolIsInsufficient": "N/A - the symbol itself is completely unused.",
+    "keepOrRemove": "REMOVE",
+    "owner": "C3_AUTH_PRODUCTION_VERTICAL_SLICE",
+    "reviewCondition": "Remove the symbol and its @internal tag completely from the codebase as it hides unused production code (violating Rule 1)."
+  },
+  {
+    "path": "src/auth/domain/events/password-changed.event.ts",
+    "symbol": "RefreshSessionRotatedDomainEvent",
+    "productionUsed": false,
+    "testUsed": false,
+    "whyExportRequired": "None. This is preparatory domain event dead code with no real production or test consumers.",
+    "whyPrivateSymbolIsInsufficient": "N/A - the symbol itself is completely unused.",
+    "keepOrRemove": "REMOVE",
+    "owner": "C3_AUTH_PRODUCTION_VERTICAL_SLICE",
+    "reviewCondition": "Remove the symbol and its @internal tag completely from the codebase as it hides unused production code (violating Rule 1)."
+  },
+  {
+    "path": "src/auth/domain/events/password-changed.event.ts",
+    "symbol": "RefreshSessionRevokedDomainEvent",
+    "productionUsed": false,
+    "testUsed": false,
+    "whyExportRequired": "None. This is preparatory domain event dead code with no real production or test consumers.",
+    "whyPrivateSymbolIsInsufficient": "N/A - the symbol itself is completely unused.",
+    "keepOrRemove": "REMOVE",
+    "owner": "C3_AUTH_PRODUCTION_VERTICAL_SLICE",
+    "reviewCondition": "Remove the symbol and its @internal tag completely from the codebase as it hides unused production code (violating Rule 1)."
+  },
+  {
+    "path": "src/tenancy/application/commands/confirm-handover/confirm-handover.command.ts",
+    "symbol": "HandoverProtocolAlreadyClosedError",
+    "productionUsed": false,
+    "testUsed": false,
+    "whyExportRequired": "None. This is preparatory custom error dead code with no real production or test consumers.",
+    "whyPrivateSymbolIsInsufficient": "N/A - the symbol is completely unused.",
+    "keepOrRemove": "REMOVE",
+    "owner": "C4_TENANCY_DOMAIN_AND_AUTHORIZATION",
+    "reviewCondition": "Remove the symbol and its @internal tag completely from the codebase (violating Rule 7)."
+  }
+]

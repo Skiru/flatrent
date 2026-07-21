@@ -1,13 +1,8 @@
 {
   "$schema": "https://knip.dev/schema.json",
-  "treatConfigHintsAsErrors": false,
+  "includeEntryExports": true,
+  "treatConfigHintsAsErrors": true,
   "treatTagHintsAsErrors": true,
-  "ignoreIssues": {
-    "src/auth/domain/events/password-changed.event.ts": ["exports"],
-    "src/auth/domain/model/user-account.aggregate.ts": ["exports"],
-    "src/tenancy/application/commands/confirm-handover/confirm-handover.command.ts": ["exports"],
-    "src/auth/domain/model/refresh-session.entity.ts": ["exports"]
-  },
   "entry": [
     "src/main.ts!",
     "src/cli-entry.ts!",
@@ -39,9 +34,7 @@
     "src/shared/interfaces/http/http-exception.filter.ts",
     "src/tenancy/infrastructure/messaging/local-event-dispatcher.ts",
     "src/tenancy/infrastructure/messaging/outbox-relay.service.ts",
-    "src/tenancy/interfaces/sqs/maintenance-events.consumer.ts",
-    "src/auth/domain/events/password-changed.event.ts",
-    "src/tenancy/application/commands/confirm-handover/confirm-handover.command.ts"
+    "src/tenancy/interfaces/sqs/maintenance-events.consumer.ts"
   ],
   "ignoreDependencies": [
     "@nestjs/schematics",
@@ -50,17 +43,9 @@
     "@types/jest",
     "@aws-sdk/lib-dynamodb",
     "helmet",
-    "tsconfig-paths",
-    "@aws-sdk/client-dynamodb",
-    "@aws-sdk/client-sns",
-    "@aws-sdk/client-sqs"
+    "tsconfig-paths"
   ],
-  "ignoreBinaries": [
-    "nest"
-  ],
-  "tags": ["-@internal"],
-  "ignoreIssues": {
-  },
+  "ignoreBinaries": [],
   "exceptions": [
     {
       "pathOrSymbol": "src/auth/infrastructure/messaging/local-event-dispatcher.ts",

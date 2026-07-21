@@ -1,0 +1,142 @@
+{
+  "knipVersion": "5.0.1",
+  "nodeVersion": "v22.23.1",
+  "commands": [
+    {
+      "command": "pnpm exec knip",
+      "exitCode": 0,
+      "unusedFiles": [],
+      "unusedExports": [],
+      "unusedTypes": [],
+      "unusedDependencies": [],
+      "configHints": [
+        "Unused item in ignoreDependencies: @aws-sdk/client-dynamodb",
+        "Unused item in ignoreDependencies: @aws-sdk/client-sns",
+        "Unused item in ignoreDependencies: @aws-sdk/client-sqs",
+        "Unused item in ignoreBinaries: nest"
+      ],
+      "tagHints": []
+    },
+    {
+      "command": "pnpm exec knip --production",
+      "exitCode": 0,
+      "unusedFiles": [],
+      "unusedExports": [],
+      "unusedTypes": [],
+      "unusedDependencies": [],
+      "configHints": [],
+      "tagHints": []
+    },
+    {
+      "command": "pnpm exec knip --include-entry-exports",
+      "exitCode": 1,
+      "unusedFiles": [],
+      "unusedExports": [
+        {
+          "path": "src/tenancy/composition/tenancy.module.ts",
+          "symbol": "LOCAL_EVENT_DISPATCHER_TENANCY_TOKEN",
+          "line": 195,
+          "col": 14
+        }
+      ],
+      "unusedTypes": [],
+      "unusedDependencies": [],
+      "configHints": [
+        "Unused item in ignoreDependencies: @aws-sdk/client-dynamodb",
+        "Unused item in ignoreDependencies: @aws-sdk/client-sns",
+        "Unused item in ignoreDependencies: @aws-sdk/client-sqs",
+        "Unused item in ignoreBinaries: nest"
+      ],
+      "tagHints": []
+    },
+    {
+      "command": "pnpm exec knip --production --include-entry-exports",
+      "exitCode": 1,
+      "unusedFiles": [],
+      "unusedExports": [
+        {
+          "path": "src/auth/infrastructure/persistence/auth-data-source.ts",
+          "symbol": "authDataSource",
+          "line": 28,
+          "col": 14
+        },
+        {
+          "path": "src/tenancy/composition/tenancy.module.ts",
+          "symbol": "LOCAL_EVENT_DISPATCHER_TENANCY_TOKEN",
+          "line": 195,
+          "col": 14
+        },
+        {
+          "path": "src/tenancy/infrastructure/persistence/tenancy-data-source.ts",
+          "symbol": "tenancyDataSource",
+          "line": 37,
+          "col": 14
+        }
+      ],
+      "unusedTypes": [],
+      "unusedDependencies": [],
+      "configHints": [],
+      "tagHints": []
+    },
+    {
+      "command": "pnpm exec knip --include-entry-exports --debug",
+      "exitCode": 1,
+      "unusedFiles": [],
+      "unusedExports": [
+        {
+          "path": "src/tenancy/composition/tenancy.module.ts",
+          "symbol": "LOCAL_EVENT_DISPATCHER_TENANCY_TOKEN",
+          "line": 195,
+          "col": 14
+        }
+      ],
+      "unusedTypes": [],
+      "unusedDependencies": [],
+      "configHints": [
+        "Unused item in ignoreDependencies: @aws-sdk/client-dynamodb",
+        "Unused item in ignoreDependencies: @aws-sdk/client-sns",
+        "Unused item in ignoreDependencies: @aws-sdk/client-sqs",
+        "Unused item in ignoreBinaries: nest"
+      ],
+      "tagHints": []
+    }
+  ],
+  "classifications": [
+    {
+      "path": "src/tenancy/composition/tenancy.module.ts",
+      "symbol": "LOCAL_EVENT_DISPATCHER_TENANCY_TOKEN",
+      "issueType": "unusedExport",
+      "whyFileIsEntry": "NestJS module composition root file, matched by 'src/**/composition/*.ts!' entry pattern",
+      "runtimeConsumer": "None",
+      "staticConsumer": "None",
+      "frameworkOrToolConsumer": "None",
+      "isPublicLibraryApi": false,
+      "isTestOnly": false,
+      "action": "DELETE_DEAD_CODE"
+    },
+    {
+      "path": "src/auth/infrastructure/persistence/auth-data-source.ts",
+      "symbol": "authDataSource",
+      "issueType": "unusedExport",
+      "whyFileIsEntry": "TypeORM CLI DataSource configuration, matched by 'src/auth/infrastructure/persistence/auth-data-source.ts!' entry pattern",
+      "runtimeConsumer": "None",
+      "staticConsumer": "test/integration/auth-persistence.spec.ts, test/faults/faults.spec.ts",
+      "frameworkOrToolConsumer": "TypeORM CLI (used to run migrations/schemas)",
+      "isPublicLibraryApi": false,
+      "isTestOnly": false,
+      "action": "RETAIN_WITH_DOCUMENTED_EXCEPTION"
+    },
+    {
+      "path": "src/tenancy/infrastructure/persistence/tenancy-data-source.ts",
+      "symbol": "tenancyDataSource",
+      "issueType": "unusedExport",
+      "whyFileIsEntry": "TypeORM CLI DataSource configuration, matched by 'src/tenancy/infrastructure/persistence/tenancy-data-source.ts!' entry pattern",
+      "runtimeConsumer": "None",
+      "staticConsumer": "test/integration/tenancy-persistence.spec.ts",
+      "frameworkOrToolConsumer": "TypeORM CLI (used to run migrations/schemas)",
+      "isPublicLibraryApi": false,
+      "isTestOnly": false,
+      "action": "RETAIN_WITH_DOCUMENTED_EXCEPTION"
+    }
+  ]
+}

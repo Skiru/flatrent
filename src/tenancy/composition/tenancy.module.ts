@@ -192,4 +192,3 @@ const CQRSHandlers = [
   providers: [...UseCaseProviders, ...RepositoryProviders, ...SharedProviders, ...CQRSHandlers],
 })
 export class TenancyModule {}
-export const LOCAL_EVENT_DISPATCHER_TENANCY_TOKEN = 'LocalEventDispatcherTenancy';

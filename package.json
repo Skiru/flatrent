@@ -10,7 +10,7 @@
   },
   "scripts": {
     "nest": "nest",
-    "start": "nest start",
+    "start": "node dist/src/main.js",
     "start:dev": "nest start --watch",
     "start:prod": "node dist/src/main.js",
     "build": "nest build",
@@ -22,6 +22,8 @@
     "architecture:check": "dependency-cruiser --config .dependency-cruiser.js src",
     "dependency:check": "dependency-cruiser --config .dependency-cruiser.js src",
     "deadcode:check": "knip",
+    "deadcode:production": "knip --production",
+    "deadcode:entry-exports": "knip --include-entry-exports",
     "test": "jest",
     "test:unit": "jest --config jest-unit.json",
     "test:application": "jest --config jest-application.json",
